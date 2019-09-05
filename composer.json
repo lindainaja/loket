@@ -1,0 +1,14 @@
+{
+    "name": "dansky/loket",
+    "type": "project",
+    "require": {
+        "codeigniter/framework": "3.1.10",
+        "paragonie/random_compat": "^9.99"
+    },
+    "authors": [
+        {
+            "name": "Putra",
+            "email": "cristminix@gmail.com"
+        }
+    ]
+}
