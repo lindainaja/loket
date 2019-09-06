@@ -28,15 +28,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<nav class="navbar navbar-default">
 				<ul class="nav navbar-nav">
 					<li><a href="<?=base_url()?>tiket">Dispenser/Tiket</a></li>
-					<li><a href="javascript:;">List Antrian Pendaftaran</a></li>
-					<li><a href="javascript:;">List Antrian Poli</a></li>
-					<li><a href="javascript:;">List Antrian Apotik</a></li>
+					<li><a href="<?=base_url()?>antrian/pendaftaran">Display Antrian Pendaftaran</a></li>
+					<li><a href="<?=base_url()?>antrian/poli">Display Antrian Poli</a></li>
+					<li><a href="<?=base_url()?>antrian/apotik">Display Antrian Apotik</a></li>
 
-					<li><a href="javascript:;">Adm Loket Pendaftaran</a></li>
-					<li><a href="javascript:;">Adm Poli</a></li>
-					<li><a href="javascript:;">Adm Apotik</a></li>
+					<li><a href="<?=base_url()?>adm/pendaftaran">Adm Loket Pendaftaran</a></li>
+					<li><a href="<?=base_url()?>adm/poli">Adm Poli</a></li>
+					<li><a href="<?=base_url()?>adm/apotik">Adm Apotik</a></li>
 
-					<li><a href="javascript:;">Pengaturan</a></li>
+					<li><a href="<?=base_url()?>pengaturan">Pengaturan</a></li>
 
 				</ul>
 			</nav>
