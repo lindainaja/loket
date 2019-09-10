@@ -11,7 +11,7 @@ class Antrian extends CI_Controller {
 		$this->load->view('antrian/index', $data);
 	
 	}
-	public function pendaftaran()
+	public function loket()
 	{
 		$jenis_pendaftaran = $this->m_jenis_pendaftaran->get_jenis_pendaftaran();
 		$data = [
@@ -22,7 +22,7 @@ class Antrian extends CI_Controller {
 
 	 
 
-		$this->load->view('antrian/pendaftaran', $data);
+		$this->load->view('antrian/loket', $data);
 	}
 	public function poli()
 	{

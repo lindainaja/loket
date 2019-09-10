@@ -64,7 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<marquee> Selamat Datang di <?=$nama_instansi?></marquee>
 		</div>
 		<div class="col-md-2">
-			<div id="clock"></div>
+			<div id="clock" class="text-right"></div>
 		</div>
 	</div> 
 

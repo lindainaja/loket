@@ -26,7 +26,7 @@
 			<nav class="navbar navbar-default">
 				<ul class="nav navbar-nav">
 					<?foreach($jenis_pendaftaran as $jp):?>
-					<li><a href="<?=base_url()?>tiket/cetak/<?=$jp->slug?>"><?=$jp->nama?></a></li>
+					<li><a class="prnt-ifr" href="<?=base_url()?>tiket/cetak/<?=$jp->slug?>"><?=$jp->nama?></a></li>
 					<?endforeach?>
 				</ul>
 			</nav>
@@ -35,7 +35,7 @@
 	<div class="row">
 		
 		<div class="col-md-12">
-		
+		<iframe src="" id="iframeCetak"></iframe>
 		</div>
 
 	
@@ -43,4 +43,19 @@
 </div>
 
 </body>
+<script type="text/javascript">
+	$(document).ready(() => {
+		$('a.prnt-ifr').click(()=>{
+			var url = $(event.target).prop('href');
+			console.log(url)
+			$('#iframeCetak').prop('src',url);
+			return false;
+		});
+		$('#iframeCetak').on('load',() => {
+		    console.log('load the iframe')
+		    $('#iframeCetak').get(0).contentWindow.print();
+		    //the console won't show anything even if the iframe is loaded.
+		})
+	});	
+</script>
 </html>
