@@ -11,4 +11,11 @@ class Pengaturan extends CI_Controller {
 		$this->load->view('pengaturan/index', $data);
 	
 	}
+	public function save()
+	{
+		$pl = json_decode(file_get_contents('php://input'));
+
+		$this->m_setting->update($pl);
+		echo json_encode($pl);
+	}
 }

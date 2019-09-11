@@ -30,4 +30,9 @@ class M_setting extends CI_Model {
 		return $this->db->where('key',$key)->select('value')->get('m_setting')->row()->value;
 		# code...
 	}
+	public function update($pl)
+	{
+		return $this->db->where('key',$pl->key)->update('m_setting',['value'=>$pl->value]);
+		# code...
+	}
 }
