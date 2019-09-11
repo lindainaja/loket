@@ -16,8 +16,8 @@ class Antrian extends CI_Controller {
 		$jenis_pendaftaran = $this->m_jenis_pendaftaran->get_jenis_pendaftaran();
 		$data = [
 			'jenis_pendaftaran' => $jenis_pendaftaran,
-			'nama_instansi' => $this->m_setting->get_setting('nama_instansi'),
-			'app_name' => $this->m_setting->get_setting('app_name')
+			'nama_instansi' => $this->m_setting->get_value('nama_instansi'),
+			'app_name' => $this->m_setting->get_value('app_name')
 		];
 
 	 
