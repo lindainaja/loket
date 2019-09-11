@@ -19,4 +19,15 @@ class M_setting extends CI_Model {
 	{
 		return $this->db->get('m_setting')->row()->{$key};
 	}
+
+	public function get_all()
+	{
+		return $this->db->get('m_setting')->result_object();
+	
+	}
+	public function get_value($key)
+	{
+		return $this->db->where('key',$key)->select('value')->get('m_setting')->row()->value;
+		# code...
+	}
 }
