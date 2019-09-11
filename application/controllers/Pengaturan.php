@@ -14,7 +14,7 @@ class Pengaturan extends CI_Controller {
 	public function save()
 	{
 		$pl = json_decode(file_get_contents('php://input'));
-
+		$pl->value = xss_clean($pl->value);
 		$this->m_setting->update($pl);
 		echo json_encode($pl);
 	}
