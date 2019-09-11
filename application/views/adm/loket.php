@@ -8,6 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" type="text/css" href="<?=base_url()?>public/assets/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="<?=base_url()?>public/assets/css/bootstrap-grid.min.css">
 	<link rel="stylesheet" type="text/css" href="<?=base_url()?>public/assets/css/bootstrap-reboot.min.css">
+	<link rel="stylesheet" type="text/css" href="<?=base_url()?>public/assets/fontawesome/css/all.min.css">
 
 	<script type="text/javascript" src="<?=base_url()?>public/assets/js/jquery-3.2.1.slim.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>public/assets/js/popper.min.js"></script>
@@ -25,17 +26,38 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<div class="row">
 
 		<div class="col-md-8">
-			
+			<div class="row">
+				<div class="col-md-8">
+					<select class="form-control" id="pilih-loket">
+						<?foreach($lokets as $loket):?>
+						<option value="<?=$loket->id?>"><?=$loket->keterangan?></option>
+						<?endforeach?>
+					</select>
+				</div>
+			</div>
 		</div>
 		<div class="col-md-4">
 			<table class="table table-bordered">
 				<thead>
-					<tr><th>NOMOR ANTRIAN</th></tr>
+					<tr><th>NOMOR ANTRIAN <button class="btn btn-info" style="float: right;"><i class="fas fa-square"></i> Lewat</button></th></tr>
 				</thead>
 				<tbody>
-					<tr><td><h1><span id="nomor_antrian">A0001</span></h1></td></tr>
-					<tr><td><span id="nama_loket">Loket 1</span></td></tr>
-					<tr><td><i class="fas fa-volume-up"></i> Call</td></tr>
+					<tr>
+						<td>
+							<h1><span id="nomor_antrian"></span></h1>
+						</td>
+					</tr>
+					<tr>
+						<td><span id="nama_loket"></span></td>
+					</tr>
+					<tr>
+						<td>
+							<button class="btn btn-info"><i class="fas fa-volume-up"></i> Panggil</button>
+							<button class="btn btn-info"><i class="fas fa-credit-card"></i> Pendaftaran</button>
+							
+							<button class="btn btn-info" style="float: right;"><i class="fas fa-check"></i> Selesai</button>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
