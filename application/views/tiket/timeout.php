@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>OK_PRINT</title>
+	<title>ERR_TIMEOUT</title>
 </head>
 <body>
-<h1><?=$nomor_antrian?></h1>
+<h1><?=$pesan?></h1>
 </body>
 </html>

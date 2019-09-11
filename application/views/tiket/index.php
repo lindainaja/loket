@@ -53,7 +53,10 @@
 		});
 		$('#iframeCetak').on('load',() => {
 		    console.log('load the iframe')
-		    $('#iframeCetak').get(0).contentWindow.print();
+		    let cw = $('#iframeCetak').get(0).contentWindow;
+		    if(cw.document.title === 'OK_PRINT'){
+		    	cw.print();
+		    };
 		    //the console won't show anything even if the iframe is loaded.
 		})
 	});	
