@@ -3,7 +3,8 @@
     "type": "project",
     "require": {
         "codeigniter/framework": "3.1.10",
-        "paragonie/random_compat": "^9.99"
+        "paragonie/random_compat": "^9.99",
+        "phpseclib/phpseclib": "^2.0"
     },
     "authors": [
         {

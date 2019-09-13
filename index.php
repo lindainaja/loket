@@ -68,6 +68,8 @@ switch (ENVIRONMENT)
 	case 'development':
 		error_reporting(-1);
 		ini_set('display_errors', 1);
+			error_reporting(E_ALL & ~E_NOTICE & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
+		
 	break;
 
 	case 'testing':
@@ -75,7 +77,7 @@ switch (ENVIRONMENT)
 		ini_set('display_errors', 0);
 		if (version_compare(PHP_VERSION, '5.3', '>='))
 		{
-			error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
+			error_reporting(E_ALL & ~E_NOTICE & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
 		}
 		else
 		{
@@ -312,4 +314,7 @@ switch (ENVIRONMENT)
  *
  * And away we go...
  */
+require_once FCPATH.'vendor/autoload.php';
+require_once APPPATH.'core/License.php';
 require_once BASEPATH.'core/CodeIgniter.php';
+

@@ -21,3 +21,6 @@ function parse_setting_template($text,$i=1)
 	}
 	return $text;
 }
+
+
+ 
