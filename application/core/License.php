@@ -49,11 +49,23 @@ class License
 		if(file_exists($pk_path)){
 			$pk = file_get_contents($pk_path);
 		}
-		if(file_exists($pk_path)){
+		if(file_exists($pub_path)){
 			$pub = file_get_contents($pub_path);
 		}
 		return json_encode([$pk,$pub]);
 
+	}
+	public function GenerateSupportFile($data)
+	{
+		$license_path = "license/";
+
+		$org_path  = $license_path . "/org.json";
+		$raw = json_encode($data);
+		$chipertext = License::Encrypt($raw);
+		if(is_dir($license_path)){
+			file_put_contents($org_path,$chipertext);
+		}
+		
 	}
 	public static function CheckSerialNumber($hardware_id)
 	{
@@ -62,19 +74,14 @@ class License
 		$pk_path 	  = $license_path . "/pk";
 		$pub_path 	  = $license_path . "/pub";
 	}
-	public static function CheckSupportFile($hardware_id)
-	{
-
-	}
-	public static function GenerateSupportFile($hardware_id)
-	{
-		# code...
-	}
+	
 	public static function IsSoftwareLicensed()
 	{
 		$hardware_id = License::GetHardwareId('c');
 		$license_path = "license/";
-
+		if(!is_dir($license_path)){
+			return false;
+		}
 		$pk_path 	  = $license_path . "/pk";
 		$pub_path 	  = $license_path . "/pub";
 
@@ -91,10 +98,10 @@ class License
 		}
 
 		if(file_exists($pk_path)){
-			$pk = file_get_contents($pk_path);
+			$pk = @file_get_contents($pk_path);
 		}
-		if(file_exists($pk_path)){
-			$pub = file_get_contents($pub_path);
+		if(file_exists($pub_path)){
+			$pub = @file_get_contents($pub_path);
 		}
 		if(!empty($pk) && !empty($pub)){
 			$rsa = new RSA();
@@ -117,27 +124,126 @@ class License
 
 	public static function GetOrganization()
 	{
-		# code...
+		$license_path = "license/";
+
+		$org_path  = $license_path . "/org.json";
+		$chipertext = @file_get_contents($org_path);
+		$raw = License::Decrypt($chipertext);
+
+		$obj = json_decode($raw);
+		// print_r($obj->nama_instansi);
+		if(is_object($obj)){
+			return $obj->nama_instansi;
+		}
+		return 'N/A';
 	}
 	public static function GetAddress()
 	{
-		# code...
+		$license_path = "license/";
+
+		$org_path  = $license_path . "/org.json";
+		$chipertext = @file_get_contents($org_path);
+		$raw = License::Decrypt($chipertext);
+
+		$obj = json_decode($raw);
+
+		if(is_object($obj)){
+			return $obj->alamat;
+		}
+		return 'N/A';
 	}
 
 	public static function GetEmail()
 	{
-		# code...
+		$license_path = "license/";
+
+		$org_path  = $license_path . "/org.json";
+		$chipertext = @file_get_contents($org_path);
+		$raw = License::Decrypt($chipertext);
+
+		$obj = json_decode($raw);
+
+		if(is_object($obj)){
+			return $obj->email;
+		}
+		return 'N/A';
 	}
 	public static function GetPhone()
 	{
-	
+		$license_path = "license/";
+
+		$org_path  = $license_path . "/org.json";
+		$chipertext = @file_get_contents($org_path);
+		$raw = License::Decrypt($chipertext);
+
+		$obj = json_decode($raw);
+
+		if(is_object($obj)){
+			return $obj->telp;
+		}
+		return 'N/A';
 	}
 	public static function Encrypt($plaintext)
 	{
-	
+		$hardware_id = License::GetHardwareId('c');
+		$license_path = "license/";
+
+		$pk_path 	  = $license_path . "/pk";
+		$pub_path 	  = $license_path . "/pub";
+
+		$pk = "";
+		$pub = "";
+
+		
+
+		if(file_exists($pk_path)){
+			$pk = file_get_contents($pk_path);
+		}
+		if(file_exists($pub_path)){
+			$pub = file_get_contents($pub_path);
+		}
+		if(!empty($pk) && !empty($pub)){
+			
+			$rsa = new RSA();
+			$rsa->setPassword($hardware_id);
+
+			$rsa->loadKey($pub); 
+			$rsa->loadKey($pk); 
+
+			
+			return $rsa->encrypt($plaintext);
+
+			
+		}
+		return '';
 	}
-	public static function Decrypt($chipertext)
+	public static function Decrypt($cipertext)
 	{
-	
+		$hardware_id = License::GetHardwareId('c');
+		$license_path = "license/";
+
+		$pk_path 	  = $license_path . "/pk";
+		$pub_path 	  = $license_path . "/pub";
+
+		$pk = "";
+		$pub = "";
+ 
+
+		if(file_exists($pk_path)){
+			$pk = @file_get_contents($pk_path);
+		}
+		if(file_exists($pub_path)){
+			$pub = @file_get_contents($pub_path);
+		}
+		if(!empty($pk) && !empty($pub) ){
+			
+			$rsa = new RSA();
+		
+
+			$rsa->loadKey($pk); // private key
+			$rsa->loadKey($pub); // pub key
+			return $rsa->decrypt($cipertext);
+		}
+		return '';
 	}
 }

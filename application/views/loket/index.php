@@ -48,7 +48,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<div class="row">
 		
 		<div class="col-md-12">
-		<div>Nama Instansi :<?=$organization?></div>	
+		<div>Nama Instansi :<?=$nama_instansi?></div>	
+		<div>Alamat :<?=$address?></div>	
+		<div>Telp :<?=$telp?></div>	
 		<div>Hardware ID :<?=$hardware_id?></div>	
 		<div>Ada Lisensi :<?=$is_licensed?'Ya':'Tidak'?></div>	
 		
