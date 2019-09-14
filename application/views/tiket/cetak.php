@@ -3,7 +3,11 @@
 <head>
 	<title>OK_PRINT</title>
 </head>
-<body>
-<h1><?=$nomor_antrian?></h1>
+<body style="text-align: center;">
+<p><?=$nama_instansi?></p>	
+<p><?=$alamat_instansi?></p>
+<p><img style="width: 50px" src="<?=base_url()?>public/assets/images/puskesmas.png"></p>	
+<h1 style="font-size: 4em;margin: 0;"><?=$nomor_antrian?></h1>
+<small>Terima kasih atas kunjungan Anda</small>
 </body>
 </html>

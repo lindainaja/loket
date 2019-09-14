@@ -6,9 +6,14 @@ class Tiket extends CI_Controller {
 	public function index()
 	{
 		$jenis_pendaftaran = $this->m_jenis_pendaftaran->get_jenis_pendaftaran();
+		$nama_instansi = License::GetOrganization();
+		$address = License::GetAddress();
+		$tlp_instansi = License::GetPhone();
 		$data = [
 			'jenis_pendaftaran' => $jenis_pendaftaran,
-			'test' => 12
+			'nama_instansi' => $nama_instansi,
+			'alamat_instansi'=>$address,
+			'tlp_instansi' => $tlp_instansi
 		];
 
 	 
@@ -40,9 +45,16 @@ class Tiket extends CI_Controller {
 		$tiket_digit_format = $this->m_setting->get_value('tiket_digit_format');
 		$nomor_antrian = $kode_jenis . sprintf($tiket_digit_format, $nomor_terkhir) ;
 
+		$nama_instansi = License::GetOrganization();
+		$address = License::GetAddress();
+		$tlp_instansi = License::GetPhone();
+
 		$data = [
 			'jenis' => $jenis,
-			'nomor_antrian' => $nomor_antrian
+			'nomor_antrian' => $nomor_antrian,
+			'nama_instansi'=>$nama_instansi,
+			'alamat_instansi' => $address,
+			'tlp_instansi' => $tlp_instansi
 		];
 
 		$this->m_pendaftaran->set_next_nomor_pendaftaran($kode_jenis);

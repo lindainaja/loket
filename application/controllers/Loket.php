@@ -19,7 +19,7 @@ class Loket extends CI_Controller {
 		$is_licensed = License::IsSoftwareLicensed();
 		$data = [
 			'nama_instansi' => $nama_instansi,
-			'address' => $address,
+			'alamat_instansi' => $address,
 			'hardware_id'=>$hardware_id,
 			'telp' => $telp,
 			'is_licensed'=>$is_licensed

@@ -17,7 +17,8 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-12">
-			<h1>Tiket</h1>
+			<h1><?=$nama_instansi?></h1>
+			<p><?=$alamat_instansi?> Telp.<?=$tlp_instansi?></p>
 		</div>
 	</div>
 	<div class="row">
@@ -26,7 +27,7 @@
 			<nav class="navbar navbar-default">
 				<ul class="nav navbar-nav">
 					<?foreach($jenis_pendaftaran as $jp):?>
-					<li><a class="prnt-ifr" href="<?=base_url()?>tiket/cetak/<?=$jp->slug?>"><?=$jp->nama?></a></li>
+					<li><a class="prnt-ifr" href="<?=base_url()?>tiket/cetak/<?=$jp->slug?>"><?=$jp->kode?> : <?=$jp->nama?></a></li>
 					<?endforeach?>
 				</ul>
 			</nav>
