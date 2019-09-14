@@ -27,11 +27,14 @@ class Tiket extends CI_Controller {
 		// periksa status layanan
 		date_default_timezone_set('Asia/Jakarta');
 		$waktu_stop_tiket = $this->m_setting->get_value('waktu_stop_tiket');
+		$enable_stop_tiket = $this->m_setting->get_value('enable_stop_tiket');
+
 		$current_dt = date('Y-m-d H:i:s');
 		$current_tm = strtotime($current_dt);
 		$stop_dt = date('Y-m-d ').$waktu_stop_tiket;
 		$stop_tm = strtotime($stop_dt);
-		if ($current_tm > $stop_tm) {
+
+		if ($enable_stop_tiket && ($current_tm > $stop_tm)) {
 		    $data= ['pesan' => 'Maaf pelayanan tiket pendaftaran telah habis.' ];//"{$current_dt} > {$stop_dt}"
 		    $this->load->view('tiket/timeout', $data);
 		    return;

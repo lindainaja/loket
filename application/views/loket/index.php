@@ -1,6 +1,4 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -28,18 +26,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="col-md-12">
 			<nav class="navbar navbar-default">
 				<ul class="nav navbar-nav">
-					<li><a href="<?=base_url()?>tiket"><i class="fab fa-bitbucket"></i> Dispenser/Tiket</a></li>
-					<li><a href="<?=base_url()?>antrian/loket"><i class="fas fa-chalkboard"></i> Display Antrian Loket</a></li>
-					<li><a href="<?=base_url()?>antrian/poli"><i class="fas fa-chalkboard"></i> Display Antrian Poli</a></li>
-					<li><a href="<?=base_url()?>antrian/apotik"><i class="fas fa-chalkboard"></i> Display Antrian Apotik</a></li>
+					<li><a target="_blank" href="<?=base_url()?>tiket"><i class="fab fa-bitbucket"></i> Dispenser/Tiket</a></li>
+					<li><a target="_blank" href="<?=base_url()?>antrian/loket"><i class="fas fa-chalkboard"></i> Display Antrian Loket</a></li>
+					<li><a target="_blank" href="<?=base_url()?>antrian/poli"><i class="fas fa-chalkboard"></i> Display Antrian Poli</a></li>
+					<li><a target="_blank" href="<?=base_url()?>antrian/apotik"><i class="fas fa-chalkboard"></i> Display Antrian Apotik</a></li>
 
-					<li><a href="<?=base_url()?>adm/loket"><i class="fas fa-chalkboard-teacher"></i> Adm Loket</a></li>
-					<li><a href="<?=base_url()?>adm/poli"><i class="fas fa-chalkboard-teacher"></i> Adm Poli</a></li>
-					<li><a href="<?=base_url()?>adm/apotik"><i class="fas fa-chalkboard-teacher"></i> Adm Apotik</a></li>
+					<li><a target="_blank" href="<?=base_url()?>adm/loket"><i class="fas fa-chalkboard-teacher"></i> Adm Loket</a></li>
+					<li><a target="_blank" href="<?=base_url()?>adm/poli"><i class="fas fa-chalkboard-teacher"></i> Adm Poli</a></li>
+					<li><a target="_blank" href="<?=base_url()?>adm/apotik"><i class="fas fa-chalkboard-teacher"></i> Adm Apotik</a></li>
 
-					<li><a href="<?=base_url()?>pengaturan"><i class="fas fa-cog"></i> Pengaturan</a></li>
-					<li><a href="<?=base_url()?>master"><i class="fas fa-database"></i> Master</a></li>
-					<li><a href="<?=base_url()?>laporan"><i class="fas fa-archive"></i> Laporan</a></li>
+					<li><a target="_blank" href="<?=base_url()?>pengaturan"><i class="fas fa-cog"></i> Pengaturan</a></li>
+					<li><a target="_blank" href="<?=base_url()?>master"><i class="fas fa-database"></i> Master</a></li>
+					<li><a target="_blank" href="<?=base_url()?>laporan"><i class="fas fa-archive"></i> Laporan</a></li>
 
 				</ul>
 			</nav>

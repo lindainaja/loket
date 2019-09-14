@@ -16,6 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<script type="text/javascript" src="<?=base_url()?>public/assets/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>public/assets/js/clock.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>public/assets/js/video.js"></script>
+	<script type="text/javascript" src="<?=base_url()?>public/assets/js/vue.min.js"></script>
 
 </head>
 <body>
@@ -85,6 +86,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		// create_clock('#clock');
 		 // $('button.vjs-big-play-button').click() ;
 
+		 
 	});
+
 </script>
 </html>
