@@ -19,4 +19,21 @@ class Adm extends CI_Controller {
 		$this->load->view('adm/loket', $data);
 	
 	}
+	// Tampilkan daftar antrian tabular data
+	public function loket_list()
+	{
+		$loket_list = $this->db->where([
+									'tanggal' => date('Y-m-d'),
+									'status' => 1,
+								])
+							  ->get('m_antrian_loket')
+							  ->result_array();
+		echo json_encode($loket_list);
+	}
+
+	// Tampilkan daftar antrian tabular data
+	public function loket_row($jp_id)
+	{
+		# code...
+	}
 }

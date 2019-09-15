@@ -31,14 +31,39 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="col-md-6">
 			<div class="row">
 				<div class="col-md-12">
-					<ul class="nav nav-tabs">
-					  <li class="nav-item">
-					    <a class="nav-link active" href="#">List Antrian</a>
-					  </li>
-					  <li class="nav-item">
-					    <a class="nav-link" href="#">Form Pendaftaran</a>
-					  </li> 
-					</ul>
+					<nav>
+					<div class="nav nav-tabs" id="nav-tab" role="tablist">
+						<div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                                <a class="nav-item nav-link active" id="nav-list-tab" data-toggle="tab" href="#nav-list" role="tab" aria-controls="nav-list" aria-selected="true">List Antrian Loket</a>
+                                <a class="nav-item nav-link" id="nav-form-tab" data-toggle="tab" href="#nav-form" role="tab" aria-controls="nav-form" aria-selected="false">Form Pendaftaran</a>
+                            </div>
+					     
+					</div>
+					</nav>
+					 <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab">
+                        	<table class="table table-stripped">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>NOMOR</th>
+										<th>WAKTU AMBIL TIKET</th>
+										<th>JENIS</th>
+									</tr>
+								</thead>
+								<tbody id="list_antrian_body">
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+								</tbody>
+							</table>
+                        </div>
+                        <div class="tab-pane" id="nav-form" role="tabpanel" aria-labelledby="nav-form-tab">
+                        </div>
+                     </div>           
+					 
 				</div>
 			</div>
 		</div>

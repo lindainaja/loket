@@ -314,6 +314,7 @@ switch (ENVIRONMENT)
  *
  * And away we go...
  */
+date_default_timezone_set('Asia/Jakarta');
 require_once FCPATH.'vendor/autoload.php';
 require_once APPPATH.'core/License.php';
 require_once BASEPATH.'core/CodeIgniter.php';

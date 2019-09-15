@@ -25,7 +25,7 @@ class Tiket extends CI_Controller {
 	{
 
 		// periksa status layanan
-		date_default_timezone_set('Asia/Jakarta');
+		
 		$waktu_stop_tiket = $this->m_setting->get_value('waktu_stop_tiket');
 		$enable_stop_tiket = $this->m_setting->get_value('enable_stop_tiket');
 
@@ -54,20 +54,31 @@ class Tiket extends CI_Controller {
 		$address = License::GetAddress();
 		$tlp_instansi = License::GetPhone();
 
+		$tanggal_waktu = tanggal_indo(date('Y-m-d'),true). ' ' .date('H.i');
+
 		$data = [
 			'jenis' => $jenis,
 			'nomor_antrian' => $nomor_antrian,
 			'nama_instansi'=>$nama_instansi,
 			'alamat_instansi' => $address,
-			'tlp_instansi' => $tlp_instansi
+			'tlp_instansi' => $tlp_instansi,
+			'tanggal_waktu' => $tanggal_waktu
 		];
+		// GET DEFAULT ID LOKET
+		$default_loket_id = $this->m_setting->get_value('default_loket_id');
+		// GET SETTING LOKET
+		$loket_id_by_setting_loket = $this->m_setting_loket->get_loket_id($jp_id);
+		if(!empty($loket_id_by_setting_loket)){
+			$default_loket_id = $loket_id_by_setting_loket;
+		}
 
 		$queue = [
 			'jp_id' => $jp_id,
 			'nomor'=>$nomor_antrian,
 			'tanggal'=>date('Y-m-d'),
 			'waktu_mulai'=> date('H:i:s'),
-			'status'=>1
+			'status'=>1,
+			'loket_id' => $default_loket_id
 		];
 
 		$this->m_antrian_loket->register($queue);
