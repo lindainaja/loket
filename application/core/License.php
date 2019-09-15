@@ -23,10 +23,31 @@ class License
 		return  str_replace("(","",str_replace(")","",License::GetVolumeLabel("c")));
 	}
 
+	private static function generate_pp($text){
+		$ci 	=& get_instance();
+		//ELEMENT OF LICENSE
+		//1. CI Exncryption Key
+		//2. SALT , your own salt
+		//3. HARDWARE ID 
+		//4. PP , Password to build RSA Cert
+		//
+		//5. Password Algoritm in extension
+		//6. Salt in Extension
+
+		$ci_ekey= $ci->config->item('encryption_key');
+		$salt 	= 'Grinting0K*#';
+		$pp 	= md5($ci_ekey.$salt.$hardware_id);
+		return $pp;
+	}
 	public static function GenerateSerialNumber($hardware_id)
 	{
-		$rsa = new RSA();
-		$rsa->setPassword($hardware_id);
+		
+		$pp = self::generate_pp($hardware_id);
+
+		$rsa 	= new RSA();
+		
+		$rsa->setPassword($pp);
+		
 		$data = $rsa->createKey();
 
 		$license_path = "license/";
@@ -73,6 +94,9 @@ class License
 
 		$pk_path 	  = $license_path . "/pk";
 		$pub_path 	  = $license_path . "/pub";
+
+		$org_path  	  = $license_path . "/org.json";
+
 	}
 	
 	public static function IsSoftwareLicensed()
@@ -105,7 +129,9 @@ class License
 		}
 		if(!empty($pk) && !empty($pub)){
 			$rsa = new RSA();
-			$rsa->setPassword($hardware_id);
+			$pp = self::generate_pp($hardware_id);
+
+			$rsa->setPassword($pp);
 			$rsa->loadKey($pk); // private key
 
 			$plaintext = 'HelloWorld';
@@ -205,7 +231,9 @@ class License
 		if(!empty($pk) && !empty($pub)){
 			
 			$rsa = new RSA();
-			$rsa->setPassword($hardware_id);
+			$pp = self::generate_pp($hardware_id);
+
+			$rsa->setPassword($pp);
 
 			$rsa->loadKey($pub); 
 			$rsa->loadKey($pk); 
@@ -221,6 +249,10 @@ class License
 	{
 		$hardware_id = License::GetHardwareId('c');
 		$license_path = "license/";
+
+		if(!self::IsSoftwareLicensed()){
+			return 'N/A';
+		}
 
 		$pk_path 	  = $license_path . "/pk";
 		$pub_path 	  = $license_path . "/pub";
@@ -238,9 +270,11 @@ class License
 		if(!empty($pk) && !empty($pub) ){
 			
 			$rsa = new RSA();
-		
+			$pp = self::generate_pp($hardware_id);
 
-			$rsa->loadKey($pk); // private key
+			$rsa->setPassword($pp);
+
+			// $rsa->loadKey($pk); // private key
 			$rsa->loadKey($pub); // pub key
 			return $rsa->decrypt($cipertext);
 		}

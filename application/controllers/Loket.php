@@ -5,6 +5,8 @@ class Loket extends CI_Controller {
 
 	public function index()
 	{
+		// $serial_number = License::GenerateSerialNumber($hardware_id);
+		
 		// License::GenerateSupportFile([
 		// 	'nama_instansi'=>'PUSKESMAS GRINTING',
 		// 	'alamat'=>'Jl. Dr. Sudrajat No. 66',
@@ -15,7 +17,7 @@ class Loket extends CI_Controller {
 		$address = License::GetAddress();
 		$telp = License::GetPhone();
 		$hardware_id = License::GetHardwareId('c');
-		// $serial_number = License::GenerateSerialNumber($hardware_id);
+		
 		$is_licensed = License::IsSoftwareLicensed();
 		$data = [
 			'nama_instansi' => $nama_instansi,
