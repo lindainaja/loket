@@ -31,7 +31,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="col-md-6">
 			<div class="row">
 				<div class="col-md-12">
-					
+					<ul class="nav nav-tabs">
+					  <li class="nav-item">
+					    <a class="nav-link active" href="#">List Antrian</a>
+					  </li>
+					  <li class="nav-item">
+					    <a class="nav-link" href="#">Form Pendaftaran</a>
+					  </li> 
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -39,24 +46,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="row">
 				<div class="col-md-4" style="padding: 0;border:solid 1px #3498db;border-right: none;">
 					<h4 class="text-center" style="background-color: #3498db;margin: 0">A.UMUM</h4>
-					<div class="row" style="padding: 1em">
+					<div class="row" style="padding: .5em">
 						<div class="col-md-6">
-							<button class="btn btn-default"><i class="fas fa-volume-up"></i> Panggil</button>
+							<button class="btn btn-primary"><i class="fas fa-volume-up"></i> Panggil</button>
 						</div>
 						<div class="col-md-6">
-							<button class="btn btn-default"><i class="fas fa-square"></i> Lewat</button>
+							<button class="btn btn-danger"><i class="fas fa-square"></i> Lewat</button>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-12 text-center">
-							<button class="btn btn-default"><i class="fas  fa-credit-card"></i> Pendaftaran</button>
+							<button class="btn btn-warning"><i class="fas  fa-credit-card"></i> Pendaftaran</button>
 						</div>
 						<div>&nbsp;</div>
 					</div>
 				</div>
 				<div class="col-md-4" style="padding: 0;border: solid 1px #2ecc71;border-right: none">
 					<h4 class="text-center" style="background-color: #2ecc71;margin: 0">B.BPJS</h4>
-					<div class="row" style="padding: 1em">
+					<div class="row" style="padding: .5em">
 						<div class="col-md-6">
 							<button class="btn btn-default"><i class="fas fa-volume-up"></i> Panggil</button>
 						</div>
@@ -72,7 +79,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</div>
 				<div class="col-md-4" style="padding:0;border:solid 1px #e74c3c">
 					<h4 class="text-center" style="background-color: #e74c3c;margin: 0">C.LANSIA/ANAK</h4>
-					<div class="row" style="padding: 1em">
+					<div class="row" style="padding: .5em">
 						<div class="col-md-6">
 							<button class="btn btn-default"><i class="fas fa-volume-up"></i> Panggil</button>
 						</div>
@@ -103,9 +110,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </body>
 <script type="text/javascript">
 	$(document).ready(()=>{
-		setInterval(()=>{
-		 	document.location = document.location
-		 },5000);
+		// setInterval(()=>{
+		//  	document.location = document.location
+		//  },5000);
 	});
 </script>
 </html>

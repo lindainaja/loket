@@ -41,8 +41,10 @@ class Tiket extends CI_Controller {
 		}
 
 		// echo "{$current_dt} < {$stop_dt}";
-		$kode_jenis_pendaftaran = $this->m_jenis_pendaftaran->get_kode_jenis_pendaftaran();
+		$jp_ids = [];
+		$kode_jenis_pendaftaran = $this->m_jenis_pendaftaran->get_kode_jenis_pendaftaran($jp_ids);
 		$kode_jenis = $kode_jenis_pendaftaran[$jenis];
+		$jp_id = $jp_ids[$jenis];
 
 		$nomor_terkhir = $this->m_pendaftaran->get_nomor_pendaftaran($kode_jenis);
 		$tiket_digit_format = $this->m_setting->get_value('tiket_digit_format');
@@ -59,6 +61,16 @@ class Tiket extends CI_Controller {
 			'alamat_instansi' => $address,
 			'tlp_instansi' => $tlp_instansi
 		];
+
+		$queue = [
+			'jp_id' => $jp_id,
+			'nomor'=>$nomor_antrian,
+			'tanggal'=>date('Y-m-d'),
+			'waktu_mulai'=> date('H:i:s'),
+			'status'=>1
+		];
+
+		$this->m_antrian_loket->register($queue);
 
 		$this->m_pendaftaran->set_next_nomor_pendaftaran($kode_jenis);
 

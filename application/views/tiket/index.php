@@ -36,7 +36,7 @@
 	<div class="row">
 		
 		<div class="col-md-12">
-		<iframe src="" id="iframeCetak"></iframe>
+		<iframe src="" id="iframeCetak" style="display:none;visibility: hidden;"></iframe>
 		</div>
 
 	
@@ -57,6 +57,8 @@
 		    let cw = $('#iframeCetak').get(0).contentWindow;
 		    if(cw.document.title === 'OK_PRINT'){
 		    	cw.print();
+		    }else{
+		    	alert($(cw.document.body).text());
 		    };
 		    //the console won't show anything even if the iframe is loaded.
 		})
