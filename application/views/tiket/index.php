@@ -36,7 +36,7 @@
 	<div class="row">
 		
 		<div class="col-md-12">
-		<iframe src="" id="iframeCetak" style="display:none;visibility: hidden;"></iframe>
+		<iframe src="" id="iframeCetak" style=""></iframe>
 		</div>
 
 	
@@ -49,19 +49,36 @@
 		$('a.prnt-ifr').click(()=>{
 			var url = $(event.target).prop('href');
 			console.log(url)
-			$('#iframeCetak').prop('src',url);
+			// $().prop('src',url);
+			setIFrameSrc('iframeCetak', url);
 			return false;
 		});
-		$('#iframeCetak').on('load',() => {
-		    console.log('load the iframe')
-		    let cw = $('#iframeCetak').get(0).contentWindow;
-		    if(cw.document.title === 'OK_PRINT'){
-		    	cw.print();
-		    }else{
-		    	alert($(cw.document.body).text());
-		    };
-		    //the console won't show anything even if the iframe is loaded.
-		})
+		
+
+		function setIFrameSrc(idFrame, url) {
+		    var originalFrame = document.getElementById(idFrame);
+		    var newFrame = document.createElement("iframe");
+		    newFrame.id = originalFrame.getAttribute("id");
+		    newFrame.width = originalFrame.getAttribute("width");
+		    newFrame.height = originalFrame.getAttribute("height");
+		    newFrame.src = url;    
+		    var parent = originalFrame.parentNode;
+		    parent.replaceChild(newFrame, originalFrame);
+
+		    $('#'+idFrame).on('load',() => {
+			    console.log('load the iframe')
+			    let cw = $('#'+idFrame).get(0).contentWindow;
+			    if(cw.document.title === 'OK_PRINT'){
+			    	cw.print();
+			    	setTimeout(()=>{
+			    		setIFrameSrc(idFrame, '');
+			    	},3000);
+			    }else{
+			    	//alert($(cw.document.body).text());
+			    };
+			    //the console won't show anything even if the iframe is loaded.
+			});
+		}
 	});	
 </script>
 </html>

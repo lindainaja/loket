@@ -54,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 	</div> 
 	<div class="row" style="position: fixed;bottom: 0;width:100%">
-		<div class="col-md-4" style="background-color: #3498db;;padding-top: 1em;padding-bottom: 0.5em">
+		<div class="col-md-4" style="background-color: #3498db;padding-top: 1em;padding-bottom: 0.5em">
 			<div class="text-center">
 				<h2 style="font-size :300%">A.UMUM</h2>
 				<h2 style="font-size :500%">10</h2>
