@@ -22,12 +22,14 @@ class Adm extends CI_Controller {
 	// Tampilkan daftar antrian tabular data
 	public function loket_list()
 	{
-		$loket_list = $this->db->select('al.nomor,al.waktu_mulai,jp.slug')->where([
+		$loket_list = $this->db->select('al.id,al.status,al.nomor,al.waktu_mulai,jp.slug,jp.kode,jp.id jp_id')->where([
 									'tanggal' => date('Y-m-d'),
 									'status' => 1,
 								])
 							  ->join('m_jenis_pendaftaran jp','al.jp_id=jp.id')
+							  ->order_by('waktu_mulai','asc')
 							  ->get('m_antrian_loket al')
+
 							  ->result_array();
 		echo json_encode($loket_list);
 	}
