@@ -134,10 +134,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 </body>
 <script type="text/javascript">
+	function update_list_loket() {
+		let url = '<?=base_url()?>adm/loket_list';
+		axios.get(url).then((r)=>{
+			console.log(r);
+			let content = '';
+
+			$.each(r.data,(id,item)=>{
+				content += '<tr><td>'+(id+1)+'</td><td>'+item.nomor+'</td><td>'+item.waktu_mulai+'</td><td>'+item.slug.toUpperCase()+'</td></tr>'
+			});
+			$('#list_antrian_body').html(content);
+		}).then((e)=>{
+
+			
+		});
+	}
 	$(document).ready(()=>{
-		// setInterval(()=>{
-		//  	document.location = document.location
-		//  },5000);
+		setInterval(()=>{
+		 	update_list_loket();
+		 },5000);
 	});
 </script>
 </html>
