@@ -31,11 +31,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</div>
 	<div class="row">
 
-		<div class="col-md-5">
+		<div class="col-md-6">
 			<div class="row" style="padding-top: 5px">
 				<div class="col-md-12" style="">
 					<nav>
-					<div class="nav nav-tabs" id="nav-tab" role="tablist">
+					<div class="nav nav-tabs" id="nav-tab" role="tablist" style="border-bottom: none;">
 						<div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
                                 <a class="nav-item nav-link active" id="nav-list-tab" data-toggle="tab" href="#nav-list" role="tab" aria-controls="nav-list" aria-selected="true">List Antrian Loket</a>
                                 <a class="nav-item nav-link" id="nav-form-tab" data-toggle="tab" href="#nav-form" role="tab" aria-controls="nav-form" aria-selected="false">Form Register</a>
@@ -70,8 +70,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</div>
 			</div>
 		</div>
-		<div class="col-md-7">
-			<div class="row" id="admLoket">
+		<div class="col-md-6">
+			<div class="row" id="admLoket" style="margin-top: 9px">
 				<div class="col-md-4 kotak-a">
 					<h4 class="text-center kotak-title">A . <i>BPJS</i></h4>
 					<p class="text-center">{{a.nomor}}</p>
@@ -99,7 +99,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<button class="btn btn-primary" :disabled="b.status!=1 || b.btnState!=1" @click="executeBtnProc('b','call')"><i class="fas fa-volume-up"></i> Call</button>
 						</div>
 						<div class="col-md-6">
-							<button class="btn btn-danger" :disabled="b.status!=1" @click="executeBtnProc('b','skip')"><i class="fas fa-square"></i> Skip</button>
+							<button class="btn btn-danger" :disabled="b.status!=1|| b.btnSkip!=1" @click="executeBtnProc('b','skip')"><i class="fas fa-square"></i> Skip</button>
 						</div>
 					</div>
 					<div class="row">
