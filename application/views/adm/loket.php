@@ -22,30 +22,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </head>
 <body>
 
-<div class="container-fluid">
+<div class="container-fluid" style="padding: 1.5em">
 	<div class="row">
-		<div class="col-md-12" style="background-color: #dedede">
-			<h1 class="text-center"><?=$nama_instansi?></h1>
-			<p class="text-center"><?=$alamat_instansi?> Tel. <?=$telp?></p>
+		<div class="col-md-12" style="padding: 0em 1em 1em 1em">
+			<h1 class="text-left"><?=$nama_instansi?></h1>
+			<p class="text-left"><?=$alamat_instansi?> Tel. <?=$telp?></p>
 		</div>
 	</div>
 	<div class="row">
 
-		<div class="col-md-6">
-			<div class="row">
-				<div class="col-md-12">
+		<div class="col-md-5">
+			<div class="row" style="padding-top: 5px">
+				<div class="col-md-12" style="">
 					<nav>
 					<div class="nav nav-tabs" id="nav-tab" role="tablist">
 						<div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
                                 <a class="nav-item nav-link active" id="nav-list-tab" data-toggle="tab" href="#nav-list" role="tab" aria-controls="nav-list" aria-selected="true">List Antrian Loket</a>
-                                <a class="nav-item nav-link" id="nav-form-tab" data-toggle="tab" href="#nav-form" role="tab" aria-controls="nav-form" aria-selected="false">Form Pendaftaran</a>
+                                <a class="nav-item nav-link" id="nav-form-tab" data-toggle="tab" href="#nav-form" role="tab" aria-controls="nav-form" aria-selected="false">Form Register</a>
                             </div>
 					     
 					</div>
 					</nav>
 					 <div class="tab-content" id="nav-tabContent">
                         <div class="tab-pane fade show active" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab">
-                        	<table class="table table-stripped">
+                        	<table class="table table-bordered" style="margin-top: 1px">
 								<thead>
 									<tr>
 										<th>#</th>
@@ -70,59 +70,59 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-7">
 			<div class="row" id="admLoket">
-				<div class="col-md-4" style="padding: 0;border:solid 1px #3498db;border-right: none;">
-					<h4 class="text-center" style="background-color: #3498db;margin: 0">A.BPJS</h4>
+				<div class="col-md-4 kotak-a">
+					<h4 class="text-center kotak-title">A . <i>BPJS</i></h4>
 					<p class="text-center">{{a.nomor}}</p>
 					<div class="row" style="padding: .5em">
 						<div class="col-md-6">
-							<button class="btn btn-primary" :disabled="a.status!=1 || a.btnState!=1" @click="executeBtnProc('a','call')"><i class="fas fa-volume-up"></i> Panggil</button>
+							<button class="btn btn-primary" :disabled="a.status!=1 || a.btnState!=1" @click="executeBtnProc('a','call')"><i class="fas fa-volume-up"></i> Call</button>
 						</div>
 						<div class="col-md-6">
-							<button class="btn btn-danger" :disabled="a.status!=1" @click="executeBtnProc('a','skip')"><i class="fas fa-square"></i> Lewat</button>
+							<button class="btn btn-danger" :disabled="a.status!=1" @click="executeBtnProc('a','skip')"><i class="fas fa-square"></i> Skip</button>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-12 text-center">
-							<button class="btn btn-warning" :disabled="a.status!=1 " @click="executeBtnProc('a','register')"><i class="fas  fa-credit-card"></i> Pendaftaran</button>
+						<div class="col-md-12 text-center mt1em" >
+							<button class="btn btn-warning" :disabled="a.status!=1 " @click="executeBtnProc('a','register')"><i class="fas  fa-credit-card"></i> Register</button>
 						</div>
 						<div>&nbsp;</div>
 					</div>
 				</div>
-				<div class="col-md-4" style="padding: 0;border: solid 1px #2ecc71;border-right: none">
-					<h4 class="text-center" style="background-color: #2ecc71;margin: 0">B.UMUM</h4>
+				<div class="col-md-4 kotak-b">
+					<h4 class="text-center kotak-title" style="background-color: rgb(46, 204, 113)">B . <i>UMUM</i></h4>
 					<p class="text-center">{{b.nomor}}</p>
 
 					<div class="row" style="padding: .5em">
 						<div class="col-md-6">
-							<button class="btn btn-primary" :disabled="b.status!=1 || b.btnState!=1" @click="executeBtnProc('b','call')"><i class="fas fa-volume-up"></i> Panggil</button>
+							<button class="btn btn-primary" :disabled="b.status!=1 || b.btnState!=1" @click="executeBtnProc('b','call')"><i class="fas fa-volume-up"></i> Call</button>
 						</div>
 						<div class="col-md-6">
-							<button class="btn btn-danger" :disabled="b.status!=1" @click="executeBtnProc('b','skip')"><i class="fas fa-square"></i> Lewat</button>
+							<button class="btn btn-danger" :disabled="b.status!=1" @click="executeBtnProc('b','skip')"><i class="fas fa-square"></i> Skip</button>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-12 text-center">
-							<button class="btn btn-warning" :disabled="b.status!=1" @click="executeBtnProc('b','register')"><i class="fas  fa-credit-card"></i> Pendaftaran</button>
+						<div class="col-md-12 text-center mt1em">
+							<button class="btn btn-warning" :disabled="b.status!=1" @click="executeBtnProc('b','register')"><i class="fas  fa-credit-card"></i> Register</button>
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4" style="padding:0;border:solid 1px #e74c3c">
-					<h4 class="text-center" style="background-color: #e74c3c;margin: 0">C.LANSIA/ANAK</h4>
+				<div class="col-md-4 kotak-c">
+					<h4 class="text-center kotak-title" style="background-color: #e74c3c">C . <i>LANSIA ANAK</i></h4>
 					<p class="text-center">{{c.nomor}}</p>
 
 					<div class="row" style="padding: .5em">
 						<div class="col-md-6">
-							<button class="btn btn-primary" :disabled="c.status!=1 || c.btnState!=1" @click="executeBtnProc('c','call')"><i class="fas fa-volume-up"></i> Panggil</button>
+							<button class="btn btn-primary" :disabled="c.status!=1 || c.btnState!=1" @click="executeBtnProc('c','call')"><i class="fas fa-volume-up"></i> Call</button>
 						</div>
 						<div class="col-md-6">
-							<button class="btn btn-danger" :disabled="c.status!=1" @click="executeBtnProc('c','skip')"><i class="fas fa-square"></i> Lewat</button>
+							<button class="btn btn-danger" :disabled="c.status!=1" @click="executeBtnProc('c','skip')"><i class="fas fa-square"></i> Skip</button>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-12 text-center">
-							<button class="btn btn-warning" :disabled="c.status!=1" @click="executeBtnProc('c','register')"> <i class="fas  fa-credit-card"></i> Pendaftaran</button>
+						<div class="col-md-12 text-center mt1em">
+							<button class="btn btn-warning" :disabled="c.status!=1" @click="executeBtnProc('c','register')"> <i class="fas  fa-credit-card"></i> Register</button>
 						</div>
 					</div>
 					
@@ -142,6 +142,39 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 </body>
 <style type="text/css">
+	.mt1em{
+		margin-top: 1em;
+	}
+	#audioPlayer{
+		position: fixed !important;
+	}
+	.kotak-a{
+		border-top: 1px solid rgb(52, 152, 219);
+	    border-right: none;
+	    border-bottom: 1px solid rgb(52, 152, 219);
+	    border-left: 1px solid rgb(52, 152, 219);
+	    /*border-image: initial;*/
+	}
+	.kotak-c{
+		border:solid 1px #e74c3c;
+	}
+	.kotak-b{
+		border-top: 1px solid rgb(46, 204, 113);
+	    border-right: none;
+	    border-bottom: 1px solid rgb(46, 204, 113);
+	    border-left: 1px solid rgb(46, 204, 113);
+	}
+	.kotak-title{
+		background-color: rgb(52, 152, 219);
+	    margin: 0 -16px;
+	    padding: .2em;
+	    color: #fff;
+	    /*font-size: .8em;*/
+	}
+	.kotak-title > i{
+	    font-size: .8em;
+
+	}
 	div#admLoket > div.col-md-4 > p.text-center{
 		padding: .2em;
     font-size: 120%;
@@ -204,7 +237,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			a:create_lkt('a',''),
 			b:create_lkt('b',''),
 			c:create_lkt('c',''),
-			ttsState : 0
+			ttsState : 0,
+			firstTime:false
 		},
 		methods:{
 			executeBtnProc:function(kode,meth){
@@ -230,8 +264,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				// var oldPlayer = document.getElementById('aplayer');
 				try{videojs('aplayer').dispose(); console.log('aplayer destroyed')}catch(e){};
 				
-				let source  = $('<source>/>').attr('src',url)
-											.attr('type','audio/mp3');
+				let source  = $('<source/>').attr('type','audio/mp3');
 				let content = $('<audio></audio>').attr('id','aplayer')
 												  .attr('class','video-js vjs-default-skin')
 												  .attr('width','600')
@@ -241,12 +274,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 												  .attr('data-setup','{"autoplay":true}')
 												  .css({position:'absolut','z-index':-1,left:'-10000px',top:0})
 												  .append(source); 
-				$('div#audioPlayer').empty().html(content);
+				$('div#audioPlayer').empty().html(content)
+				.find('source').attr('src',url)
+											;
 
 				videojs('aplayer').ready(function() {
 				    self[kode].btnState = 0;
 				    this.play();
-				    this.on('loadeddata',()=>{
+				    this.on('playing',()=>{
 
 				    	
 				    	console.log(self[kode].btnState)
@@ -279,21 +314,33 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					let kode = j.kode.toLowerCase();
 					if(typeof self[kode] != 'undefined'){
 						// self[kode] = create_lkt(kode,j.nomor,j);
-						if( self[kode].status != 1 && self[kode].id != oldJ.id){
+						// try{
+						if(self.firstTime){
+								self[kode] = create_lkt(kode,j.nomor,j);
+
+						}else{
+							if( self[kode].status != 1 && self[kode].id != oldJ.id){
+								self[kode] = create_lkt(kode,j.nomor,j);
+								console.log(j);
+
+							}
+						}	
+							
+						// }
+						// catch(e){
+
+						// }
+						
+					}else{
 						self[kode] = create_lkt(kode,j.nomor,j);
 						console.log(j);
-
-						}
-					}else{
-					self[kode] = create_lkt(kode,j.nomor,j);
-					console.log(j);
 
 					}
 				});
 			}
 		}
 	});
-	function update_list_loket(ld) {
+	function update_list_loket(ld,firstTime) {
 		let url = '<?=base_url()?>adm/loket_list';
 		axios.get(url).then((r)=>{
 			//console.log(r);
@@ -317,6 +364,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				}	
 				
 			});
+			if(firstTime){
+				admLoketVm.firstTime =true;
+			}
 			admLoketVm.lds=loket_data;
 			$('#list_antrian_body').html(content);
 		}).then((e)=>{
@@ -328,7 +378,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		setInterval(()=>{
 		 	update_list_loket(loket_data);
 		 },5000);
-		update_list_loket(loket_data);
+		update_list_loket(loket_data,true);
 	});
 </script>
 </html>
