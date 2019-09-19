@@ -27,7 +27,7 @@ class Adm extends CI_Controller {
 									'status' => 1,
 								])
 							  ->join('m_jenis_pendaftaran jp','al.jp_id=jp.id')
-							  ->order_by('waktu_mulai','asc')
+							  ->order_by('al.id','asc')
 							  ->get('m_antrian_loket al')
 
 							  ->result_array();

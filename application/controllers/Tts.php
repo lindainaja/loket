@@ -6,6 +6,7 @@ class Tts extends CI_Controller {
 	public function speak($text)
 	{
 		// echo "Speaking $text";
+		$text=base64_decode($text);
 
 		// change following setting to a cache folder could increase performance
 		$base_dir =  basename(APPPATH);
@@ -45,7 +46,7 @@ class Tts extends CI_Controller {
 		$filepath = $base_dir . '/v' . $voice . 's' . $speed . 'p' . $pitch .
 		    'a' . $volume . 't' . $filename;
 
-		$text = preg_replace('/\W/', " ", $text);
+		// $text = preg_replace('/\W/', " ", $text);
 
 		// print_r($filepath);
 		// die();
@@ -65,7 +66,7 @@ class Tts extends CI_Controller {
 		}
 		$output = '';
 		if (!file_exists($filepath)) {
-		  $cmd =  BALCON." -n \"Vocalizer Damayanti - Indonesian For KobaSpeech 2\" -s -8 -o raw -t $text | ".LAME." --preset voice -q 9 --vbr-new - $filepath";
+		  $cmd =  BALCON." -n \"Vocalizer Damayanti - Indonesian For KobaSpeech 2\" -s -4 -o raw -t $text | ".LAME." --preset voice -q 9 --vbr-new - $filepath";
 
 		    // echo $cmd;
 		    // echo getcwd() . "\n";

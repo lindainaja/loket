@@ -73,11 +73,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="col-md-6">
 			<div class="row" id="admLoket">
 				<div class="col-md-4" style="padding: 0;border:solid 1px #3498db;border-right: none;">
-					<h4 class="text-center" style="background-color: #3498db;margin: 0">A.UMUM</h4>
+					<h4 class="text-center" style="background-color: #3498db;margin: 0">A.BPJS</h4>
 					<p class="text-center">{{a.nomor}}</p>
 					<div class="row" style="padding: .5em">
 						<div class="col-md-6">
-							<button class="btn btn-primary" :disabled="a.status!=1" @click="executeBtnProc('a','call')"><i class="fas fa-volume-up"></i> Panggil</button>
+							<button class="btn btn-primary" :disabled="a.status!=1 || a.btnState!=1" @click="executeBtnProc('a','call')"><i class="fas fa-volume-up"></i> Panggil</button>
 						</div>
 						<div class="col-md-6">
 							<button class="btn btn-danger" :disabled="a.status!=1" @click="executeBtnProc('a','skip')"><i class="fas fa-square"></i> Lewat</button>
@@ -85,18 +85,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
 					<div class="row">
 						<div class="col-md-12 text-center">
-							<button class="btn btn-warning" :disabled="a.status!=1" @click="executeBtnProc('a','register')"><i class="fas  fa-credit-card"></i> Pendaftaran</button>
+							<button class="btn btn-warning" :disabled="a.status!=1 " @click="executeBtnProc('a','register')"><i class="fas  fa-credit-card"></i> Pendaftaran</button>
 						</div>
 						<div>&nbsp;</div>
 					</div>
 				</div>
 				<div class="col-md-4" style="padding: 0;border: solid 1px #2ecc71;border-right: none">
-					<h4 class="text-center" style="background-color: #2ecc71;margin: 0">B.BPJS</h4>
+					<h4 class="text-center" style="background-color: #2ecc71;margin: 0">B.UMUM</h4>
 					<p class="text-center">{{b.nomor}}</p>
 
 					<div class="row" style="padding: .5em">
 						<div class="col-md-6">
-							<button class="btn btn-primary" :disabled="b.status!=1" @click="executeBtnProc('b','call')"><i class="fas fa-volume-up"></i> Panggil</button>
+							<button class="btn btn-primary" :disabled="b.status!=1 || b.btnState!=1" @click="executeBtnProc('b','call')"><i class="fas fa-volume-up"></i> Panggil</button>
 						</div>
 						<div class="col-md-6">
 							<button class="btn btn-danger" :disabled="b.status!=1" @click="executeBtnProc('b','skip')"><i class="fas fa-square"></i> Lewat</button>
@@ -114,7 +114,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 					<div class="row" style="padding: .5em">
 						<div class="col-md-6">
-							<button class="btn btn-primary" :disabled="c.status!=1" @click="executeBtnProc('c','call')"><i class="fas fa-volume-up"></i> Panggil</button>
+							<button class="btn btn-primary" :disabled="c.status!=1 || c.btnState!=1" @click="executeBtnProc('c','call')"><i class="fas fa-volume-up"></i> Panggil</button>
 						</div>
 						<div class="col-md-6">
 							<button class="btn btn-danger" :disabled="c.status!=1" @click="executeBtnProc('c','skip')"><i class="fas fa-square"></i> Lewat</button>
@@ -122,7 +122,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
 					<div class="row">
 						<div class="col-md-12 text-center">
-							<button class="btn btn-warning" :disabled="c.status!=1"@click="executeBtnProc('c','register')"> <i class="fas  fa-credit-card"></i> Pendaftaran</button>
+							<button class="btn btn-warning" :disabled="c.status!=1" @click="executeBtnProc('c','register')"> <i class="fas  fa-credit-card"></i> Pendaftaran</button>
 						</div>
 					</div>
 					
@@ -151,6 +151,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	}
 </style>
 <script type="text/javascript">
+	function extract_tts(text) {
+		let textSpeech  = '';
+		let textSplited = text.split('');
+
+		$.each(textSplited,(i,j)=>{
+			let t = ''+j ;
+			if(t.match(/[a-zA-Z]/)){
+				textSpeech += ','+t+',';
+
+			}
+			if(t.match(/[0-9]/)){
+				if(t==0){
+					textSpeech += ',Kosong,';
+
+				}else{
+					textSpeech += t;
+				}
+				
+			}
+		});
+		console.log(textSpeech);
+		return textSpeech;
+	}
 	function base_url(){
 		return '<?=base_url()?>';
 	}
@@ -162,7 +185,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	
 	};
 	function create_lkt(kode,nomor,obj){
-		let lkt = {kode:kode,nomor:nomor,id:-1,status:-1,jp_id:-1};
+		let lkt = {kode:kode,nomor:nomor,id:-1,status:-1,jp_id:-1,
+
+			btnState:1 // kontrol button enabled
+		};
 		return $.extend(lkt,obj);
 	}
 	let admLoketVm = new Vue({
@@ -177,7 +203,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			},
 			a:create_lkt('a',''),
 			b:create_lkt('b',''),
-			c:create_lkt('c','')
+			c:create_lkt('c',''),
+			ttsState : 0
 		},
 		methods:{
 			executeBtnProc:function(kode,meth){
@@ -186,14 +213,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				return this[method](lkt);
 			},
 			_executeBtn_call:function(lkt){
+				console.log('called')
+				if(this.ttsState!=0){
+					console.log('dont run twice');
+					return;
+				}
+				this.ttsState = 0;
+				let kode = lkt.kode.toLowerCase();
+				let self = this;
 				console.log(JSON.stringify(lkt))
-				let textUri = 'Nomor_Antrian_'+lkt.nomor;
-				let url = base_url() + 'tts/speak/' + textUri;
+				let textUri = 'Nomor_Antrian_'+extract_tts(lkt.nomor);
+				let url = base_url() + 'tts/speak/' + btoa(textUri);
 				// axios.post(url,lkt).then((r)=>{
 
 				// });
 				// var oldPlayer = document.getElementById('aplayer');
-				try{videojs('aplayer').dispose()}catch(e){};
+				try{videojs('aplayer').dispose(); console.log('aplayer destroyed')}catch(e){};
 				
 				let source  = $('<source>/>').attr('src',url)
 											.attr('type','audio/mp3');
@@ -204,11 +239,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 												  .attr('controls',true)
 												  .attr('preload','auto')
 												  .attr('data-setup','{"autoplay":true}')
+												  .css({position:'absolut','z-index':-1,left:'-10000px',top:0})
 												  .append(source); 
 				$('div#audioPlayer').empty().html(content);
 
 				videojs('aplayer').ready(function() {
+				    self[kode].btnState = 0;
 				    this.play();
+				    this.on('loadeddata',()=>{
+
+				    	
+				    	console.log(self[kode].btnState)
+				    });
+				    this.on("ended",function(){
+				    	self[kode].btnState = 1;
+						this.ttsState = 1;
+
+				    });
+				    this.on("error",function(){
+				    	alert('Tts Error Detected !!!');
+				    	self[kode].btnState = 1;
+						this.ttsState = 1;
+
+				    });
 				});
 			},
 			_executeBtn_skip:function(lkt){
@@ -222,9 +275,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			lds:function(n,o){
 				let self = this;
 				$.each(n,(i,j)=>{
-					console.log(j);
+					let oldJ = o[i];
 					let kode = j.kode.toLowerCase();
+					if(typeof self[kode] != 'undefined'){
+						// self[kode] = create_lkt(kode,j.nomor,j);
+						if( self[kode].status != 1 && self[kode].id != oldJ.id){
+						self[kode] = create_lkt(kode,j.nomor,j);
+						console.log(j);
+
+						}
+					}else{
 					self[kode] = create_lkt(kode,j.nomor,j);
+					console.log(j);
+
+					}
 				});
 			}
 		}
@@ -234,14 +298,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		axios.get(url).then((r)=>{
 			//console.log(r);
 			let content = '';
+			loket_data={};
 			// let lds = {};
 			$.each(r.data,(id,item)=>{
 				content += '<tr><td>'+(id+1)+'</td><td>'+item.nomor+'</td><td>'+item.waktu_mulai+'</td><td>'+item.slug.toUpperCase()+'</td></tr>'
 					ld
-				if(typeof loket_data[item.slug] == 'undefined'){
+				if( typeof loket_data[item.slug] == 'undefined'){
 					loket_data[item.slug] = create_loket(item);
-				}else if(typeof loket_data[item.slug].status == 3){
-					loket_data[item.slug] = create_loket(item);
+					console.log(loket_data[item.slug]);
+				}
+				else if(typeof loket_data[item.slug] != 'undefined'){
+					if( loket_data[item.slug].status != 1){
+						loket_data[item.slug] = create_loket(item);
+						console.log(loket_data[item.slug]);
+
+					}
+					
 				}	
 				
 			});
