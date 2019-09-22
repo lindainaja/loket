@@ -5,6 +5,7 @@ class Tts extends CI_Controller {
 
 	public function speak($text)
 	{
+		error_reporting(0);
 		// echo "Speaking $text";
 		$text=base64_decode($text);
 
@@ -66,12 +67,12 @@ class Tts extends CI_Controller {
 		}
 		$output = '';
 		if (!file_exists($filepath)) {
-		  $cmd =  BALCON." -n \"Vocalizer Damayanti - Indonesian For KobaSpeech 2\" -s -4 -o raw -t $text | ".LAME." --preset voice -q 9 --vbr-new - $filepath";
+		  $cmd =  BALCON." -n \"Vocalizer Damayanti - Indonesian For KobaSpeech 2\" -s -4 -o raw -t \"$text\" | ".LAME." --preset voice -q 9 --vbr-new - $filepath";
 
 		    // echo $cmd;
 		    // echo getcwd() . "\n";
 		    // echo "espeak " .( file_exists( "bin/espeak.exe") ? ' exist' : " not exist") . "\n";
-		  $output = print_r (shell_exec($cmd));
+		  $output = shell_exec($cmd);
 		}
 		// die();
 		if(file_exists($filepath)){

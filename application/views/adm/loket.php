@@ -52,6 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										<th>NOMOR</th>
 										<th>WAKTU AMBIL TIKET</th>
 										<th>JENIS</th>
+										<th>STATUS</th>
 									</tr>
 								</thead>
 								<tbody id="list_antrian_body">
@@ -77,15 +78,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<p class="text-center">{{a.nomor}}</p>
 					<div class="row" style="padding: .5em">
 						<div class="col-md-6">
-							<button class="btn btn-primary" :disabled="a.status!=1 || a.btnState!=1" @click="executeBtnProc('a','call')"><i class="fas fa-volume-up"></i> Call</button>
+							<button class="btn btn-primary" :disabled="a.status!=1 || a.btnCallState!=1" @click="executeBtnProc('a','call')"><i class="fas fa-volume-up"></i> Call <span>{{a.callAttempt}}</span></button>
 						</div>
 						<div class="col-md-6">
-							<button class="btn btn-danger" :disabled="a.status!=1" @click="executeBtnProc('a','skip')"><i class="fas fa-square"></i> Skip</button>
+							<button class="btn btn-danger" :disabled="a.btnSkipState!=1" @click="executeBtnProc('a','skip')"><i class="fas fa-square"></i> Skip</button>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-12 text-center mt1em" >
-							<button class="btn btn-warning" :disabled="a.status!=1 " @click="executeBtnProc('a','register')"><i class="fas  fa-credit-card"></i> Register</button>
+							<button class="btn btn-warning" :disabled="a.btnRegisterState!=1 " @click="executeBtnProc('a','register')"><i class="fas  fa-credit-card"></i> Register</button>
 						</div>
 						<div>&nbsp;</div>
 					</div>
@@ -96,10 +97,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 					<div class="row" style="padding: .5em">
 						<div class="col-md-6">
-							<button class="btn btn-primary" :disabled="b.status!=1 || b.btnState!=1" @click="executeBtnProc('b','call')"><i class="fas fa-volume-up"></i> Call</button>
+							<button class="btn btn-primary" :disabled="b.status!=1 || b.btnCallState!=1" @click="executeBtnProc('b','call')"><i class="fas fa-volume-up"></i> Call <span v-text="'('+b.callAttempt+')'"></button>
 						</div>
 						<div class="col-md-6">
-							<button class="btn btn-danger" :disabled="b.status!=1|| b.btnSkip!=1" @click="executeBtnProc('b','skip')"><i class="fas fa-square"></i> Skip</button>
+							<button class="btn btn-danger" :disabled="b.btnSkipState!=1" @click="executeBtnProc('b','skip')"><i class="fas fa-square"></i> Skip</button>
 						</div>
 					</div>
 					<div class="row">
@@ -114,15 +115,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 					<div class="row" style="padding: .5em">
 						<div class="col-md-6">
-							<button class="btn btn-primary" :disabled="c.status!=1 || c.btnState!=1" @click="executeBtnProc('c','call')"><i class="fas fa-volume-up"></i> Call</button>
+							<button class="btn btn-primary" :disabled="c.status!=1 || c.btnCallState!=1" @click="executeBtnProc('c','call')"><i class="fas fa-volume-up"></i> Call</button>
 						</div>
 						<div class="col-md-6">
-							<button class="btn btn-danger" :disabled="c.status!=1" @click="executeBtnProc('c','skip')"><i class="fas fa-square"></i> Skip</button>
+							<button class="btn btn-danger" :disabled="c.btnSkipState!=1" @click="executeBtnProc('c','skip')"><i class="fas fa-square"></i> Skip</button>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-12 text-center mt1em">
-							<button class="btn btn-warning" :disabled="c.status!=1" @click="executeBtnProc('c','register')"> <i class="fas  fa-credit-card"></i> Register</button>
+							<button class="btn btn-warning" :disabled="c.btnRegisterState!=1" @click="executeBtnProc('c','register')"> <i class="fas  fa-credit-card"></i> Register</button>
 						</div>
 					</div>
 					
@@ -133,7 +134,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<div class="row">
 		
 		<div class="col-md-12">
-			<div id="audioPlayer"></div>
+			<div id="audioPlayer">
+				<audio id="aplayer" class="video-js vjs-default-skin" width="100" height="50" controls="controls" preload="auto" data-setup='{"autoplay":false}'>
+					<source src="http://127.0.0.1/loket/tts/speak/Tm9tb3JfQW50cmlhbl8sQSwsS29zb25nLCxLb3NvbmcsLEtvc29uZywx?q=1569117054848" type="audio/mp3"/>
+					</audio>
+			</div>
 		</div>
 
 	
@@ -146,7 +151,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		margin-top: 1em;
 	}
 	#audioPlayer{
-		position: fixed !important;
+		width: 200px;
+	    height:80px;
+	    position: absolute;
+	    top: 0;
+	    overflow: hidden;
+	    opacity: .5;
 	}
 	.kotak-a{
 		border-top: 1px solid rgb(52, 152, 219);
@@ -210,9 +220,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	function base_url(){
 		return '<?=base_url()?>';
 	}
-	function create_loket(item){
-		let ld_item = $.extend({},item);
-		return ld_item;
+	function create_loket(item,obj){
+		// let ld_item = $.extend({},item);
+		// return ld_item;
+		if(typeof obj == 'undefined'){
+			obj = {};
+		}
+		// console.log('obj:'+JSON.stringify(obj));
+
+		$.each(item,(i,j)=>{
+			if(typeof obj[i] == 'undefined'){
+				obj[i] = j;
+			}
+		});
+		// console.log('item:'+JSON.stringify(item));
+		// return obj;
+		return $.extend({},obj);
 	}
 	let loket_data = {
 	
@@ -220,9 +243,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	function create_lkt(kode,nomor,obj){
 		let lkt = {kode:kode,nomor:nomor,id:-1,status:-1,jp_id:-1,
 
-			btnState:1 // kontrol button enabled
-		};
-		return $.extend(lkt,obj);
+			
+		 
+			btnCallState:1,
+			btnSkipState:0,
+			btnRegisterState:0,
+			callAttempt:0 // kontrol button enabled
+		}
+		// if(typeof addBtState != 'undefined'){
+		// 	lkt = $.extend(lkt,btState);
+		// }
+		if(typeof obj == 'undefined'){
+			obj = {};
+		}
+		$.each(lkt,(i,j)=>{
+			if(typeof obj[i] == 'undefined'){
+				obj[i] = j;
+			}
+		});
+
+		return obj;
 	}
 	let admLoketVm = new Vue({
 		el : '#admLoket',
@@ -238,9 +278,53 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			b:create_lkt('b',''),
 			c:create_lkt('c',''),
 			ttsState : 0,
-			firstTime:false
+			firstTime:false,
+			lastPlayerId:'',
+			lastPlayAttempt:0,
+			currentCode : ''
 		},
 		methods:{
+			onUpdatePlayerState:function(state){
+				let self = this;
+				let kode = this.currentCode;
+				console.log(kode);
+
+				self[kode].btnCallState = 0;
+
+				switch(state){
+					case 'playing':
+				    	console.log('self['+kode+'].btnCallState='+self[kode].btnCallState);
+					break;
+					case 'ended':
+						self[kode].btnCallState = 1;
+						self.ttsState = 0;
+						self.lastPlayAttempt = 0;
+
+						//
+						self[kode].btnRegisterState =1;
+						self[kode].callAttempt +=1;
+
+						if(self[kode].callAttempt >= 3){
+							self[kode].btnSkipState = 1;
+						}
+						
+						console.log(JSON.stringify(self[kode]));
+					break;
+					case 'error':
+						self[kode].btnCallState = 1;
+						self.ttsState = 0;
+						if(self.lastPlayAttempt<3){
+							setTimeout(()=>{
+								self._executeBtn_call(lkt);
+								self.lastPlayAttempt += 1;
+							},500);
+							
+						}else{
+							console.log('Tts Error Detected !!!');
+						}
+					break;
+				}
+			},
 			executeBtnProc:function(kode,meth){
 				let lkt = this[kode];
 				let method = '_executeBtn_'+ meth;
@@ -254,50 +338,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				}
 				this.ttsState = 0;
 				let kode = lkt.kode.toLowerCase();
+				this.currentCode = kode;
 				let self = this;
 				console.log(JSON.stringify(lkt))
 				let textUri = 'Nomor_Antrian_'+extract_tts(lkt.nomor);
-				let url = base_url() + 'tts/speak/' + btoa(textUri);
+				let url = base_url() + 'tts/speak/' + btoa(textUri)+'/audio.mp3?q='+(new Date()).getTime();
+
+				videojs('aplayer').loadMedia({src:url});
+				videojs('aplayer').play();
 				// axios.post(url,lkt).then((r)=>{
 
 				// });
-				// var oldPlayer = document.getElementById('aplayer');
-				try{videojs('aplayer').dispose(); console.log('aplayer destroyed')}catch(e){};
 				
-				let source  = $('<source/>').attr('type','audio/mp3');
-				let content = $('<audio></audio>').attr('id','aplayer')
-												  .attr('class','video-js vjs-default-skin')
-												  .attr('width','600')
-												  .attr('height','600')
-												  .attr('controls',true)
-												  .attr('preload','auto')
-												  .attr('data-setup','{"autoplay":true}')
-												  .css({position:'absolut','z-index':-1,left:'-10000px',top:0})
-												  .append(source); 
-				$('div#audioPlayer').empty().html(content)
-				.find('source').attr('src',url)
-											;
-
-				videojs('aplayer').ready(function() {
-				    self[kode].btnState = 0;
-				    this.play();
-				    this.on('playing',()=>{
-
-				    	
-				    	console.log(self[kode].btnState)
-				    });
-				    this.on("ended",function(){
-				    	self[kode].btnState = 1;
-						this.ttsState = 1;
-
-				    });
-				    this.on("error",function(){
-				    	alert('Tts Error Detected !!!');
-				    	self[kode].btnState = 1;
-						this.ttsState = 1;
-
-				    });
-				});
 			},
 			_executeBtn_skip:function(lkt){
 
@@ -313,15 +365,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					let oldJ = o[i];
 					let kode = j.kode.toLowerCase();
 					if(typeof self[kode] != 'undefined'){
-						// self[kode] = create_lkt(kode,j.nomor,j);
-						// try{
+						
+						// 
+						// console.log('--------------------CREATE LKT UPDATE---------------------------');
+
 						if(self.firstTime){
-								self[kode] = create_lkt(kode,j.nomor,j);
+								self[kode] = create_lkt(kode,j.nomor,j,true);
+								// self.firstTime = false;
+								// console.log(j);
+								// console.log(oldJ);
 
 						}else{
 							if( self[kode].status != 1 && self[kode].id != oldJ.id){
 								self[kode] = create_lkt(kode,j.nomor,j);
 								console.log(j);
+								console.log(oldJ);
 
 							}
 						}	
@@ -332,11 +390,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						// }
 						
 					}else{
-						self[kode] = create_lkt(kode,j.nomor,j);
+						console.log('--------------------CREATE LKT NEW---------------------------');
+
+						self[kode] = create_lkt(kode,j.nomor,j,true);
 						console.log(j);
 
 					}
 				});
+				return n;
 			}
 		}
 	});
@@ -345,19 +406,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		axios.get(url).then((r)=>{
 			//console.log(r);
 			let content = '';
-			loket_data={};
+			let loket_data= {};
 			// let lds = {};
+			if(r.data.length == 0){
+				content += '<tr><td colspan="5">Belum ada data antrian</td></tr>';
+
+			}
 			$.each(r.data,(id,item)=>{
-				content += '<tr><td>'+(id+1)+'</td><td>'+item.nomor+'</td><td>'+item.waktu_mulai+'</td><td>'+item.slug.toUpperCase()+'</td></tr>'
+				content += '<tr><td>'+(id+1)+'</td><td>'+item.nomor+'</td><td>'+item.waktu_mulai+'</td><td>'+item.slug.toUpperCase()+'</td><td>'+item.status+'</td></tr>'
 					ld
 				if( typeof loket_data[item.slug] == 'undefined'){
-					loket_data[item.slug] = create_loket(item);
-					console.log(loket_data[item.slug]);
+					loket_data[item.slug] = create_loket(item,admLoketVm.lds[item.slug]);
+					// console.log(loket_data[item.slug]);
 				}
 				else if(typeof loket_data[item.slug] != 'undefined'){
 					if( loket_data[item.slug].status != 1){
-						loket_data[item.slug] = create_loket(item);
-						console.log(loket_data[item.slug]);
+						loket_data[item.slug] = create_loket(item,admLoketVm.lds[item.slug]);
+						// console.log(loket_data[item.slug]);
 
 					}
 					
@@ -377,8 +442,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	$(document).ready(()=>{
 		setInterval(()=>{
 		 	update_list_loket(loket_data);
-		 },5000);
+		 },2000);
 		update_list_loket(loket_data,true);
+		let player  = videojs('aplayer');
+
+		player.on('playing',()=>{
+		    	admLoketVm.onUpdatePlayerState('playing');
+		    });
+		    player.on("ended",function(){
+		    	admLoketVm.onUpdatePlayerState('ended');
+		    });
+		    player.on("error",function(){
+		    	admLoketVm.onUpdatePlayerState('error');
+		    });
 	});
 </script>
 </html>

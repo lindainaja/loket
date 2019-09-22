@@ -23,8 +23,8 @@ class Adm extends CI_Controller {
 	public function loket_list()
 	{
 		$loket_list = $this->db->select('al.id,al.status,al.nomor,al.waktu_mulai,jp.slug,jp.kode,jp.id jp_id')->where([
-									'tanggal' => date('Y-m-d'),
-									'status' => 1,
+									'al.tanggal' => date('Y-m-d', time()),
+									'al.status <>'=>' 5',
 								])
 							  ->join('m_jenis_pendaftaran jp','al.jp_id=jp.id')
 							  ->order_by('al.id','asc')
