@@ -18,6 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<script type="text/javascript" src="<?=base_url()?>public/assets/js/axios.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>public/assets/js/vue.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>public/assets/js/video.js"></script>
+	<script type="text/javascript" src="<?=base_url()?>public/assets/grocery_crud/themes/flexigrid/js/cookies.js"></script>
 
 </head>
 <body>
@@ -78,7 +79,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<p class="text-center">{{a.nomor}}</p>
 					<div class="row" style="padding: .5em">
 						<div class="col-md-6">
-							<button class="btn btn-primary" :disabled="a.status!=1 || a.btnCallState!=1" @click="executeBtnProc('a','call')"><i class="fas fa-volume-up"></i> Call <span>{{a.callAttempt}}</span></button>
+							<button class="btn btn-primary" :disabled="a.status!=1 || a.btnCallState!=1" @click="executeBtnProc('a','call')"><i class="fas fa-volume-up"></i> Call <span>({{a.callAttempt}})</span></button>
 						</div>
 						<div class="col-md-6">
 							<button class="btn btn-danger" :disabled="a.btnSkipState!=1" @click="executeBtnProc('a','skip')"><i class="fas fa-square"></i> Skip</button>
@@ -105,7 +106,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
 					<div class="row">
 						<div class="col-md-12 text-center mt1em">
-							<button class="btn btn-warning" :disabled="b.status!=1" @click="executeBtnProc('b','register')"><i class="fas  fa-credit-card"></i> Register</button>
+							<button class="btn btn-warning" :disabled="b.btnRegisterState!=1" @click="executeBtnProc('b','register')"><i class="fas  fa-credit-card"></i> Register</button>
 						</div>
 					</div>
 				</div>
@@ -115,7 +116,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 					<div class="row" style="padding: .5em">
 						<div class="col-md-6">
-							<button class="btn btn-primary" :disabled="c.status!=1 || c.btnCallState!=1" @click="executeBtnProc('c','call')"><i class="fas fa-volume-up"></i> Call</button>
+							<button class="btn btn-primary" :disabled="c.status!=1 || c.btnCallState!=1" @click="executeBtnProc('c','call')"><i class="fas fa-volume-up"></i> Call <span v-text="'('+c.callAttempt+')'"></span></button>
 						</div>
 						<div class="col-md-6">
 							<button class="btn btn-danger" :disabled="c.btnSkipState!=1" @click="executeBtnProc('c','skip')"><i class="fas fa-square"></i> Skip</button>
@@ -151,8 +152,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		margin-top: 1em;
 	}
 	#audioPlayer{
-		width: 200px;
-	    height:80px;
+		width: 1px;
+	    height:1px;
 	    position: absolute;
 	    top: 0;
 	    overflow: hidden;
@@ -253,7 +254,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		// if(typeof addBtState != 'undefined'){
 		// 	lkt = $.extend(lkt,btState);
 		// }
-		if(typeof obj == 'undefined'){
+		if(typeof obj != 'object'){
 			obj = {};
 		}
 		$.each(lkt,(i,j)=>{
@@ -262,7 +263,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			}
 		});
 
-		return obj;
+		return $.extend({},obj);
 	}
 	let admLoketVm = new Vue({
 		el : '#admLoket',
@@ -308,6 +309,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							self[kode].btnSkipState = 1;
 						}
 						
+						self._updateCookieRow(self[kode].id,{
+							callAttempt:self[kode].callAttempt,
+						});
+
 						console.log(JSON.stringify(self[kode]));
 					break;
 					case 'error':
@@ -331,7 +336,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				return this[method](lkt);
 			},
 			_executeBtn_call:function(lkt){
-				console.log('called')
+				// console.log('called')
 				if(this.ttsState!=0){
 					console.log('dont run twice');
 					return;
@@ -340,7 +345,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				let kode = lkt.kode.toLowerCase();
 				this.currentCode = kode;
 				let self = this;
-				console.log(JSON.stringify(lkt))
+				// console.log(JSON.stringify(lkt))
 				let textUri = 'Nomor_Antrian_'+extract_tts(lkt.nomor);
 				let url = base_url() + 'tts/speak/' + btoa(textUri)+'/audio.mp3?q='+(new Date()).getTime();
 
@@ -352,52 +357,71 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				
 			},
 			_executeBtn_skip:function(lkt){
+				console.log('called')
+				let self = this;
+				let kode = lkt.kode.toLowerCase();
+				let url = base_url() + 'adm/loket_skip/' + lkt.id;
+				// this.currentCode = kode;
+
+				axios.get(url).then(()=>{
+					console.log(lkt.id+':skipped');
+					// lkt.status = 3;
+					self[kode] = create_lkt('a','');
+					self.lds[lkt.slug] = create_lkt('a','');
+				});
+				console.log(url)
 
 			},
 			_executeBtn_register:function(lkt){
 
+			},
+			_updateCookieRow: function(id,obj){
+				let key = id;
+				$.each(obj,function(i,j){
+					let cookie_key = key + '_' + i;
+					createCookie(cookie_key,j,1);
+				});
+			},
+			_getCookieRow: function(id,key){
+				let cookie_key = id+'_'+key;
+				return readCookie(cookie_key);
+				
+			},
+			init_lkt:function(n){
+				let self=this;
+				$.each(n,(i,j)=>{
+					
+					let kode = j.kode.toLowerCase();
+					
+					self[kode] = create_lkt(kode,j.nomor,j,true);
+
+					let callAttempt = self._getCookieRow(self[kode].id,'callAttempt');
+					callAttempt = parseInt(callAttempt)+0;
+					if(!isNaN(callAttempt)){
+						self[kode].callAttempt = callAttempt;
+						if(callAttempt >= 1){
+							self[kode].btnRegisterState= 1;
+						}
+						if(callAttempt >= 3){
+							self[kode].btnSkipState = 1;
+						}
+					}
+				});
 			}
 		},
 		watch:{
+
+			// a:function(n,o){
+
+			// },
+			// b:function(n,o){
+
+			// },
+			// c:function(n,o){
+
+			// },
 			lds:function(n,o){
-				let self = this;
-				$.each(n,(i,j)=>{
-					let oldJ = o[i];
-					let kode = j.kode.toLowerCase();
-					if(typeof self[kode] != 'undefined'){
-						
-						// 
-						// console.log('--------------------CREATE LKT UPDATE---------------------------');
-
-						if(self.firstTime){
-								self[kode] = create_lkt(kode,j.nomor,j,true);
-								// self.firstTime = false;
-								// console.log(j);
-								// console.log(oldJ);
-
-						}else{
-							if( self[kode].status != 1 && self[kode].id != oldJ.id){
-								self[kode] = create_lkt(kode,j.nomor,j);
-								console.log(j);
-								console.log(oldJ);
-
-							}
-						}	
-							
-						// }
-						// catch(e){
-
-						// }
-						
-					}else{
-						console.log('--------------------CREATE LKT NEW---------------------------');
-
-						self[kode] = create_lkt(kode,j.nomor,j,true);
-						console.log(j);
-
-					}
-				});
-				return n;
+				this.init_lkt(n);
 			}
 		}
 	});
@@ -406,7 +430,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		axios.get(url).then((r)=>{
 			//console.log(r);
 			let content = '';
-			let loket_data= {};
+			let loket_data= $.extend({},admLoketVm.lds);
 			// let lds = {};
 			if(r.data.length == 0){
 				content += '<tr><td colspan="5">Belum ada data antrian</td></tr>';
@@ -415,18 +439,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			$.each(r.data,(id,item)=>{
 				content += '<tr><td>'+(id+1)+'</td><td>'+item.nomor+'</td><td>'+item.waktu_mulai+'</td><td>'+item.slug.toUpperCase()+'</td><td>'+item.status+'</td></tr>'
 					ld
-				if( typeof loket_data[item.slug] == 'undefined'){
-					loket_data[item.slug] = create_loket(item,admLoketVm.lds[item.slug]);
-					// console.log(loket_data[item.slug]);
-				}
-				else if(typeof loket_data[item.slug] != 'undefined'){
-					if( loket_data[item.slug].status != 1){
-						loket_data[item.slug] = create_loket(item,admLoketVm.lds[item.slug]);
+				if(item.status == 1){
+					if( typeof loket_data[item.slug] == 'undefined'){
+						loket_data[item.slug] = create_loket(item,{});
 						// console.log(loket_data[item.slug]);
-
 					}
-					
+					else if(typeof loket_data[item.slug] != 'undefined'){
+						if( loket_data[item.slug].status == -1){
+							loket_data[item.slug] = create_loket(item,{});
+							// console.log(loket_data[item.slug]);
+
+						}
+						
+					}
 				}	
+					
 				
 			});
 			if(firstTime){

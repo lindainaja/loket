@@ -35,8 +35,8 @@ class Adm extends CI_Controller {
 	}
 
 	// Tampilkan daftar antrian tabular data
-	public function loket_row($jp_id)
+	public function loket_skip($id)
 	{
-		# code...
+		$this->db->where('id',$id)->update('m_antrian_loket',['status'=>3]);
 	}
 }
