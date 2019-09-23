@@ -66,6 +66,41 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							</table>
                         </div>
                         <div class="tab-pane" id="nav-form" role="tabpanel" aria-labelledby="nav-form-tab">
+                        	<form class="form-horizontal" style="padding-top: 1em" action="javascript:;">
+                        		<div class="form-group row">
+                        			<label class="col-md-3 text-right">No. Antrian</label>
+                        			<div class="col-md-6">
+                        				<input type="text" disabled v-model="form.nomor" name="nomor" class="form-control" />
+                        				<input type="hidden" v-model="form.id_antrian" name="id_antrian" class="form-control" />
+                        			</div>
+                        		</div>
+                        		<div class="form-group row">
+                        			<label class="col-md-3 text-right">Nama Pasien</label>
+                        			<div class="col-md-8">
+                        				<input type="text" :disabled="form.id_antrian==''" v-model="form.nama" name="nama" class="form-control" />
+                        			</div>
+                        		</div>
+                        		<div class="form-group row">
+                        			<label class="col-md-3 text-right">Alamat Pasien</label>
+                        			<div class="col-md-8">
+                        				<input type="text" :disabled="form.id_antrian==''" v-model="form.alamat" name="alamat" class="form-control" />
+                        			</div>
+                        		</div>
+                        		<div class="form-group row">
+                        			<label class="col-md-3 text-right">Poli Tujuan</label>
+                        			<div class="col-md-8">
+                        				<?=$dd_poli?>
+                        			</div>
+                        			<input type="hidden" name="nama_poli" v-model="form.nama_poli">
+                        			<input type="hidden" name="dt" v-model="form.dt">
+                        		</div>
+                        		<div class="form-group row">
+                        			<div class="col-md-3"></div>
+                        			<div class="col-md-8 text-right">
+                        				<button class="btn btn-success" :disabled="invalidForm()" @click="doRegisterForm()"><i class="fas fa-check"></i> Finish</button>
+                        			</div>
+                        		</div>
+                        	</form>
                         </div>
                      </div>           
 					 
@@ -195,6 +230,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	}
 </style>
 <script type="text/javascript">
+	function mysql_now(){
+		return (new Date ((new Date((new Date(new Date())).toISOString() )).getTime() - ((new Date()).getTimezoneOffset()*60000))).toISOString().slice(0, 19).replace('T', ' ');
+	}
+ 
+
 	function extract_tts(text) {
 		let textSpeech  = '';
 		let textSplited = text.split('');
@@ -366,14 +406,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				axios.get(url).then(()=>{
 					console.log(lkt.id+':skipped');
 					// lkt.status = 3;
-					self[kode] = create_lkt('a','');
-					self.lds[lkt.slug] = create_lkt('a','');
+					self[kode] = create_lkt(kode,'');
+					self.lds[lkt.slug] = create_lkt(kode,'');
 				});
 				console.log(url)
 
 			},
 			_executeBtn_register:function(lkt){
-
+				// activate form tab
+				$('#nav-form-tab').click();
+				frmRegVm.setFormData(lkt);
+				console.log(lkt)
+			},
+			_afterRegister: function(lkt){
+				let self = this;
+				let kode = lkt.kode.toLowerCase();
+				
+				self[kode] = create_lkt(kode,'');
+				self.lds[lkt.slug] = create_lkt(kode,'');
+				
 			},
 			_updateCookieRow: function(id,obj){
 				let key = id;
@@ -425,6 +476,93 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			}
 		}
 	});
+	let frmRegVm = new Vue({
+		el:'#nav-form',
+		data:{
+			lkt:{},
+			form:{
+				nomor:'',
+				id_antrian:'',
+				nama:'',
+				alamat:'',
+				nama_poli:'',
+				id_poli:'',
+				dt:''
+			}
+		},
+		
+		methods:{
+			onChangePoli:function(){
+				let node = $('select[name=id_poli]');
+				this.form.nama_poli = node.find('option:selected').text();
+
+			},
+			invalidForm:function(){
+				let p_valid = 0;
+				let p_invalid = [];
+				$.each(this.form,(i,j)=>{
+					if(j.length == ''){
+						p_invalid.push(i);
+					}else{
+						p_valid += 1;
+					}
+				});
+				return p_invalid.length > 0;
+			},
+			doRegisterForm:function(){
+				let self = this;
+				let max_valid = 6;
+				let p_valid = 0;
+				let p_invalid = [];
+				$.each(this.form,(i,j)=>{
+					if(j.length == ''){
+						p_invalid.push(i);
+					}else{
+						p_valid += 1;
+					}
+				});
+				if(p_invalid.length > 0){
+					alert('Mohon Lengkapi Data Anda');
+					setTimeout(()=>{
+						$('input[name='+p_invalid[0]+']').focus();
+					},500);
+					return;
+				}
+				let url = base_url() + 'adm/loket_register';
+				axios.post(url,this.form).then((r)=>{
+					let result = r.data;
+					if(result.status){
+						admLoketVm._afterRegister(self.lkt);
+						alert('Register Berhasil !');
+						self.resetFormData();
+					}
+				});
+				console.log(this.form);
+			},
+			resetFormData:function(){
+				this.form = {
+					nomor:'',
+					id_antrian:'',
+					nama:'',
+					alamat:'',
+					nama_poli:'',
+					id_poli:'',
+					dt:''
+				};
+			},
+			setFormData: function(lkt){
+				let self = this;
+				this.lkt = lkt;
+				this.form.nomor = lkt.nomor;
+				this.form.id_antrian = lkt.id;
+				this.form.dt = mysql_now();
+				setTimeout(()=>{
+					$('#nav-form input[name=nama]').focus();
+
+				},1000);
+			}
+		}
+	});
 	function update_list_loket(ld,firstTime) {
 		let url = '<?=base_url()?>adm/loket_list';
 		axios.get(url).then((r)=>{
@@ -437,7 +575,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 			}
 			$.each(r.data,(id,item)=>{
-				content += '<tr><td>'+(id+1)+'</td><td>'+item.nomor+'</td><td>'+item.waktu_mulai+'</td><td>'+item.slug.toUpperCase()+'</td><td>'+item.status+'</td></tr>'
+				content += '<tr><td>'+(id+1)+'</td><td>'+item.nomor+'</td><td>'+item.waktu_mulai+'</td><td>'+item.slug.toUpperCase()+'</td><td>'+(item.status=='1'?'Menunggu':(item.status=='3'?'Lewat':'-'))+'</td></tr>'
 					ld
 				if(item.status == 1){
 					if( typeof loket_data[item.slug] == 'undefined'){
@@ -474,14 +612,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		let player  = videojs('aplayer');
 
 		player.on('playing',()=>{
-		    	admLoketVm.onUpdatePlayerState('playing');
-		    });
-		    player.on("ended",function(){
-		    	admLoketVm.onUpdatePlayerState('ended');
-		    });
-		    player.on("error",function(){
-		    	admLoketVm.onUpdatePlayerState('error');
-		    });
+	    	admLoketVm.onUpdatePlayerState('playing');
+	    });
+	    player.on("ended",function(){
+	    	admLoketVm.onUpdatePlayerState('ended');
+	    });
+	    player.on("error",function(){
+	    	admLoketVm.onUpdatePlayerState('error');
+	    });
 	});
 </script>
 </html>

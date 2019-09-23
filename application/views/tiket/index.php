@@ -27,7 +27,7 @@
 			<nav class="navbar navbar-default">
 				<ul class="nav navbar-nav">
 					<?foreach($jenis_pendaftaran as $jp):?>
-					<li><a class="prnt-ifr" href="<?=base_url()?>tiket/cetak/<?=$jp->slug?>"><?=$jp->kode?> : <?=$jp->nama?></a></li>
+					<li style="margin:4px"><button class="btn btn-success prnt-ifr" href="<?=base_url()?>tiket/cetak/<?=$jp->slug?>"><?=$jp->kode?> : <?=$jp->nama?></button></li>
 					<?endforeach?>
 				</ul>
 			</nav>
@@ -44,18 +44,33 @@
 </div>
 
 </body>
+<style type="text/css">
+	#iframeCetak{
+		width: 1px;
+	    height:1px;
+	    position: absolute;
+	    top: 0;
+	    overflow: hidden;
+	    opacity: .5;
+	}
+	button.prnt-ifr{
+		width: 261%;
+    text-align: left;
+	}
+</style>
 <script type="text/javascript">
 	$(document).ready(() => {
-		$('a.prnt-ifr').click(()=>{
-			var url = $(event.target).prop('href');
-			console.log(url)
-			// $().prop('src',url);
-			setIFrameSrc('iframeCetak', url);
+		$('button.prnt-ifr').click(()=>{
+			let btn = $(event.target);
+			var url = btn.attr('href');
+			// console.log(url)
+			btn.attr('disabled',true);
+			setIFrameSrc('iframeCetak', url, btn);
 			return false;
 		});
 		
 
-		function setIFrameSrc(idFrame, url) {
+		function setIFrameSrc(idFrame, url, btn) {
 		    var originalFrame = document.getElementById(idFrame);
 		    var newFrame = document.createElement("iframe");
 		    newFrame.id = originalFrame.getAttribute("id");
@@ -72,9 +87,13 @@
 			    	cw.print();
 			    	setTimeout(()=>{
 			    		setIFrameSrc(idFrame, '');
+						btn.attr('disabled',false);
+
 			    	},3000);
 			    }else{
 			    	//alert($(cw.document.body).text());
+					btn.attr('disabled',false);
+
 			    };
 			    //the console won't show anything even if the iframe is loaded.
 			});
