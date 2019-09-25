@@ -84,6 +84,13 @@ class Tiket extends CI_Controller {
 		$this->m_antrian_loket->register($queue);
 
 		$this->m_pendaftaran->set_next_nomor_pendaftaran($kode_jenis);
+		// Ini lah sesuatu yang baru
+	    
+	    $context = new ZMQContext();
+	    $socket = $context->getSocket(ZMQ::SOCKET_PUSH);
+	    $socket->connect('tcp://127.0.0.1:5555');
+	    // // print_r($socket);
+	    $socket->send(json_encode($queue));
 
 		$this->load->view('tiket/cetak', $data);
 	}

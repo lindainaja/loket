@@ -30,5 +30,8 @@ class Loket extends CI_Controller {
 		$this->load->view('loket/index', $data);
 	}
 
-	
+	public function info()
+	{
+		phpinfo();
+	}
 }
