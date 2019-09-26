@@ -90,7 +90,7 @@ class Tiket extends CI_Controller {
 	    $socket = $context->getSocket(ZMQ::SOCKET_PUSH);
 	    $socket->connect('tcp://127.0.0.1:5555');
 	    // // print_r($socket);
-	    $socket->send(json_encode($queue));
+	    $socket->send(json_encode(['cat'=>'onCetakTiket','data'=>$queue]));
 
 		$this->load->view('tiket/cetak', $data);
 	}

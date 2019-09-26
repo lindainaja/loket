@@ -16,63 +16,63 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<script type="text/javascript" src="<?=base_url()?>public/assets/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>public/assets/js/clock.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>public/assets/js/video.js"></script>
+	<script type="text/javascript" src="<?=base_url()?>public/assets/js/axios.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>public/assets/js/vue.min.js"></script>
+	<script type="text/javascript" src="<?=base_url()?>public/assets/js/autobahn.js"></script>
 
+	<script type="text/javascript" src="<?=base_url()?>public/assets/js/modules/antrian/loket.js"></script>
+<script type="text/javascript">
+	function base_url(str) {
+		return '<?=base_url()?>'+(typeof str != 'undefined'?str:'');
+	}
+	function site_url(str) {
+		return base_url(str);
+	}
+</script>
 </head>
 <body>
 
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12" style="background: #1abc9c;padding: 1em">
-			<h1 class="text-center" style="font-size: 300%"><?=$nama_instansi?></h1>
-			<h4 class="text-center"><?=$alamat_instansi?></h4>
+<div class="container-fluid" id="appMonitor">
+	<div class="row a">
+		<div class="col-md-12" style="background: #fff;padding: 1em">
+			<h4 class="" style="font-size: 100%;margin:2px"><?=$nama_instansi?></h4>
+			<small class=""><?=$alamat_instansi?></small>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-md-5">
-			<div style="text-align: center;margin-top:14% ">
-				<h1 style="font-size: 1024%">A002</h1>
+	<div class="row b">
+		<div class="col-md-5 b-curr-no">
+			<div class="p_curr_no" style="text-align: center;margin-top:14% ">
+				<h1 class="curr_no" style="font-size: 1024%">{{curr_no}}</h1>
 			</div>
 			
 		</div>
-		<div class="col-md-7" style="overflow: hidden;">
-			<video
-			 id="my-player"
-			 class="video-js"
-			 style="height:450px"
-			 muted
-			 preload="auto"
-			 poster="<?=base_url()?>public/assets/videos/oceans.png"
-			 data-setup='{"loop": true,"autoplay":true}'>
-			 <source src="<?=base_url()?>public/assets/videos/oceans.mp4" type="video/mp4"></source>
-			 <p class="vjs-no-js">
-			 To view this video please enable JavaScript, and consider upgrading to a web browser that
-			 supports HTML5 video
-			  
-			 </p>
+		<div class="col-md-7 b-video" style="overflow: hidden;">
+			<video id="mv" loop>
+			 <source src="<?=base_url()?>public/assets/videos/rudisakitgigi.mp4" type="video/mp4"></source>
+		 
 			</video>
 		</div>
 	</div> 
-	<div class="row" style="position: fixed;bottom: 0;width:100%">
-		<div class="col-md-4" style="background-color: #3498db;padding-top: 1em;padding-bottom: 0.5em">
+	<div class="row c" style="position: fixed;bottom: 0;width:100%">
+		<div class="col-md-4" style="background-color: rgb(52, 152, 219);color: #fff;padding-top: 1em;padding-bottom: 0.5em">
 			<div class="text-center">
-				<h2 style="font-size :300%">A.UMUM</h2>
-				<h2 style="font-size :500%">10</h2>
+				<h2 style="font-size :200%">A . <i style="font-size: 90%">BPJS</i></h2>
+				<h2 style="font-size :400%">{{a_cx}}</h2>
 
 			</div>
 			
 		</div>
-		<div class="col-md-4" style="background-color: #2ecc71;padding-top: 1em;padding-bottom: 0.5em">
+		<div class="col-md-4" style="background-color:rgb(46, 204, 113);color: #fff;padding-top: 1em;padding-bottom: 0.5em">
 			<div class="text-center">
-				<h2 style="font-size :300%">B.BPJS</h2>
-				<h2 style="font-size :500%">5</h2>
+				<h2 style="font-size :200%">B . <i style="font-size: 90%">UMUM</i></h2>
+				<h2 style="font-size :400%">{{b_cx}}</h2>
 				
 			</div>
 		</div>
-		<div class="col-md-4"  style="background-color: #e74c3c;padding-top: 1em;padding-bottom: 0.5em">
+		<div class="col-md-4"  style="background-color: rgb(231, 76, 60);color: #fff;padding-top: 1em;padding-bottom: 0.5em">
 			<div class="text-center">
-				<h2 style="font-size :300%">C.LANSIA/ANAK</h2>
-				<h2 style="font-size :500%">10</h2>
+				<h2 style="font-size :200%">C . <i style="font-size: 90%">LANSIA ANAK</i></h2>
+				<h2 style="font-size :400%">{{c_cx}}</h2>
 				 
 			</div>
 		</div>
@@ -81,13 +81,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </div>
 
 </body>
-<script type="text/javascript">
-	$(document).ready(()=>{
-		// create_clock('#clock');
-		 // $('button.vjs-big-play-button').click() ;
-
-		 
-	});
-
-</script>
+ <style type="text/css">
+ 	#mv{
+ 		height: 100%;
+ 		width: 100%;
+ 	}
+ 	.b-curr-no,.b-video{
+ 		padding: 0;
+ 		color: #fff;
+ 	}
+ </style>
 </html>

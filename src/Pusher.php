@@ -19,17 +19,18 @@ class Pusher implements WampServerInterface
 	/**
 	* @param string JSON'ified string yang kita dapat dari ZeoMQ
 	*/
-	public function onCetakTiket($entry)
+	public function onRealtimeUpdate($entry)
 	{
-		print_r($entry);
+		
 
 		$entryData = json_decode($entry,true);
+		print_r($entryData);
 		// Jika pencaian objek topik tidak di set , maka tidak ada yang perlu dipublis
-		if(!array_key_exists('onCetakTiket', $this->subscribedTopics)){
+		if(!array_key_exists($entryData['cat'], $this->subscribedTopics)){
 			return;
 		}
 
-		$topic = $this->subscribedTopics['onCetakTiket'];
+		$topic = $this->subscribedTopics[$entryData['cat']];
 		// kirim kembali data ke semua klien yang udah subscribe pada kategory tsb
 		$topic->broadcast($entryData);
 	}

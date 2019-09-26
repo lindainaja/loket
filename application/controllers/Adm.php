@@ -29,8 +29,9 @@ class Adm extends CI_Controller {
 	// Tampilkan daftar antrian tabular data
 	public function loket_list()
 	{
+		$dt = date('Y-m-d', time());
 		$loket_list = $this->db->select('al.id,al.status,al.nomor,al.waktu_mulai,jp.slug,jp.kode,jp.id jp_id')->where([
-									'al.tanggal' => date('Y-m-d', time()),
+									'al.tanggal' => $dt,
 									'al.status <>'=>' 5',
 								])
 							  ->join('m_jenis_pendaftaran jp','al.jp_id=jp.id')
@@ -52,6 +53,8 @@ class Adm extends CI_Controller {
 		// print_r($form);
 
 		$al_id   = $form->id_antrian;
+		$nomor    = $form->nomor;
+		$kode    = $form->kode;
 		$nama    = $form->nama;
 		$alamat  = $form->alamat;
 		$id_poli = $form->id_poli;
@@ -92,8 +95,55 @@ class Adm extends CI_Controller {
 			'ap' => $rec_ap,
 			'al' => $rec_al
 		];
-		// UPDATE AL
+		// UPDATE DAL 
+		// $this->db->where('date',$tanggal)
+		$this->loket_update_dal((object)['nomor'=>$nomor]);
 
 		echo json_encode($result);
+	}
+	
+	public function loket_update_dal($src_lkt='')
+	{
+		$lkt = json_decode(file_get_contents('php://input'));
+		
+		if(!empty($src_lkt)){
+			$lkt = $src_lkt;
+		}
+		
+		$date = date('Y-m-d H:i:s',time());
+		$dt= date('Y-m-d',time());
+		$tanggal = date('Y-m-d',time());
+
+		$a_cx = $this->db->where(['tanggal'=>$tanggal,'jp_id'=>1,'status'=>5])->get('m_antrian_loket')->num_rows();
+		$b_cx = $this->db->where(['tanggal'=>$tanggal,'jp_id'=>2,'status'=>5])->get('m_antrian_loket')->num_rows();
+		$c_cx = $this->db->where(['tanggal'=>$tanggal,'jp_id'=>3,'status'=>5])->get('m_antrian_loket')->num_rows();
+		
+		$dal = [
+			'curr_no' => $lkt->nomor,
+			'a_cx' => $a_cx,
+			'b_cx' => $b_cx,
+			'c_cx' => $c_cx,
+			'date' => $date
+		];
+		//CHECK
+		$rs = $this->db->where('DATE(date)',$dt)->get('m_display_antrian_loket')->num_rows();
+		if($rs > 0){
+			$this->db->where('DATE(date)',$dt)->update('m_display_antrian_loket',$dal);
+		}else{
+			$this->db->insert('m_display_antrian_loket',$dal);
+		}
+
+		// Ini lah sesuatu yang baru
+	    
+	    $context = new ZMQContext();
+	    $socket = $context->getSocket(ZMQ::SOCKET_PUSH);
+	    $socket->connect('tcp://127.0.0.1:5555');
+	    // // print_r($socket);
+	    $socket->send(json_encode(['cat'=>'onUpdateDal','data'=>$dal]) );
+
+	    if(empty($src_lkt)){
+	    	echo json_encode($lkt);
+	    }
+		
 	}
 }

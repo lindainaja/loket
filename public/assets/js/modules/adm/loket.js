@@ -121,9 +121,12 @@ $(document).ready(()=>{
 
 				videojs('aplayer').loadMedia({src:url});
 				videojs('aplayer').play();
-				// axios.post(url,lkt).then((r)=>{
 
-				// });
+				let dpl_url = base_url() + 'adm/loket_update_dal';
+
+				axios.post(dpl_url,lkt).then((r)=>{
+					console.log(r.data);
+				});
 				
 			},
 			_executeBtn_skip:function(lkt){
@@ -141,6 +144,8 @@ $(document).ready(()=>{
 					// lkt.status = 3;
 					self[kode] = create_lkt(kode,'');
 					self.lds[lkt.slug] = create_lkt(kode,'');
+					self._clearCookieRow(lkt);
+
 					frmRegVm.resetFormData();
 	 				update_list_loket(loket_data);
 
@@ -162,10 +167,13 @@ $(document).ready(()=>{
 				
 				self[kode] = create_lkt(kode,'');
 				self.lds[lkt.slug] = create_lkt(kode,'');
-
+				self._clearCookieRow(lkt);
 	 			update_list_loket(loket_data);
 				
 				
+			},
+			_clearCookieRow:function(lkt){
+				eraseCookie(lkt.id+'_'+'_callAttempt');
 			},
 			_updateCookieRow: function(id,obj){
 				let key = id;
@@ -291,6 +299,7 @@ $(document).ready(()=>{
 					alamat:'',
 					nama_poli:'',
 					id_poli:'',
+					kode:'',
 					dt:''
 				};
 			},
@@ -298,6 +307,7 @@ $(document).ready(()=>{
 				let self = this;
 				this.lkt = lkt;
 				this.form.nomor = lkt.nomor;
+				this.form.kode = lkt.kode;
 				this.form.id_antrian = lkt.id;
 				this.form.dt = mysql_now();
 				setTimeout(()=>{
@@ -356,21 +366,42 @@ $(document).ready(()=>{
 
 	//**************************************************
 
-	let conn = new ab.Session('ws://localhost:8080',
-		()=>{
-			conn.subscribe('onCetakTiket',(nomor,data)=>{
-				// ini tempat anda menambah article baru ke dom
-				console.log('Ada pendaftaran loket baru"'+nomor+'" : '+data.id);
-	 			update_list_loket(loket_data);
+	 
 
-			});
-		},
-		()=>{
-			console.warn('koneksi WecbSocket ditutup')
-		},
-		{'skipSubprotocolCheck': true}
-	);
+	let Ws = {
+		conn: 0,
+		instance:false,
+		autoReconnectInterval : 5*1000,
+		init:function() {
+			Ws.conn = new ab.Session('ws://localhost:8080',
+				()=>{
+					Ws.conn.subscribe('onCetakTiket',(cat,item)=>{
+						 
+						console.log('Ada pendaftaran loket baru : '+item.data.nomor);
+						// console.log(item.data);
+			 			update_list_loket(loket_data);
 
+					});
+				},
+				()=>{
+					console.warn('koneksi WecbSocket ditutup');
+					Ws.reconnect();
+				},
+				{'skipSubprotocolCheck': true}
+			); 
+		},
+		reconnect : function( ){
+			console.log('Ws: retry in '+Ws.autoReconnectInterval+'ms' );
+			var self = Ws;
+			setTimeout(function(){
+				console.log("Ws: reconnecting...");
+				self.init();
+			},Ws.autoReconnectInterval);
+		}
+
+	}
+	
+	Ws.init();
 	//*************************************************
 
 	let player  = videojs('aplayer');

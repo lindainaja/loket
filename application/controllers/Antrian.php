@@ -30,6 +30,28 @@ class Antrian extends CI_Controller {
 
 		$this->load->view('antrian/loket', $data);
 	}
+	public function loket_init()
+	{
+		
+			
+		$date = date('Y-m-d H:i:s',time());
+		$dt= date('Y-m-d',time());
+		$dal = [
+			'curr_no' => 'n/a',
+			'a_cx' => 0,
+			'b_cx' => 0,
+			'c_cx' => 0,
+			'date' => $date
+		];
+		$rs = $this->db->where('DATE(date)',$dt)->get('m_display_antrian_loket');
+
+		if($rs->num_rows()>0){
+			$dal = $rs->row_array();
+		}
+
+		echo json_encode($dal);
+		
+	}
 	public function poli()
 	{
 		$jenis_pendaftaran = $this->m_jenis_pendaftaran->get_jenis_pendaftaran();
