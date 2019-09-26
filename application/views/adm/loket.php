@@ -30,16 +30,16 @@
 </head>
 <body>
 
-<div class="container-fluid" style="padding: 1.5em">
-	<div class="row">
-		<div class="col-md-12" style="padding: 0em 1em 1em 1em">
-			<h1 class="text-left"><?=$nama_instansi?></h1>
-			<p class="text-left"><?=$alamat_instansi?> Tel. <?=$telp?></p>
+<div class="container-fluid" style="0">
+	<div class="row headerT">
+		<div class="col-md-12" style="">
+			<h4 class="text-left" style="margin:0"><?=$nama_instansi?></h4>
+			<small class="text-left"><?=$alamat_instansi?> Tel. <?=$telp?></small>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row" style="margin-bottom: 70px;padding-top: 1em">
 
-		<div class="col-md-6">
+		<div class="col-md-6 leftPane">
 			<div class="row" style="padding-top: 5px">
 				<div class="col-md-12" style="">
 					<nav>
@@ -101,7 +101,7 @@
                         			<input type="hidden" name="nama_poli" v-model="form.nama_poli">
                         			<input type="hidden" name="dt" v-model="form.dt">
                         		</div>
-                        		<div class="form-group row">
+                        		<div class="form-group row" style="padding: 0 0 1em">
                         			<div class="col-md-3"></div>
                         			<div class="col-md-8 text-right">
                         				<button class="btn btn-success" :disabled="invalidForm()" @click="doRegisterForm()"><i class="fas fa-check"></i> Finish</button>
@@ -115,7 +115,7 @@
 			</div>
 		</div>
 		<div class="col-md-6">
-			<div class="row" id="admLoket" style="margin-top: 9px">
+			<div class="row" id="admLoket" style="padding: 0 15px">
 				<div class="col-md-4 kotak-a">
 					<h4 class="text-center kotak-title">A . <i>BPJS</i></h4>
 					<p class="text-center">{{a.nomor}}</p>
@@ -186,7 +186,44 @@
 
 	
 </div>
+<div class="row d footer">
+		<div class="col-md-12 row-a text-center" style="color: #fff;padding:.5em">
+			<h4 class="" style="font-size: 100%;margin:2px">Sistem Informasi Antrian</h4>
+			<small class="">Copyright &copy; 2019 Agung Rizky Tiga </small>
+		</div>
+	</div>
 </div>
-
+<style type="text/css">
+	body{
+		background: #eee;
+	}
+	.headerT{
+		background:#34495e; 
+		color: #fff;
+		padding: 1em;
+	}
+	.row.d.footer{
+		background:#34495e; 
+		color: #fff;
+		padding: .5em 0;
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+	}
+	.leftPane{
+		/*background: #95a5a6;*/
+	}
+	.tab-content{
+		background: #fff;
+	}
+	.nav-tabs > .nav-item.nav-link{
+		color: #fff;
+		background: #7f8c8d;
+	}
+	.nav-tabs > .nav-item.nav-link.active{
+		color: #fff;
+		background: #34495e;
+	}
+</style>
 </body>
 </html>

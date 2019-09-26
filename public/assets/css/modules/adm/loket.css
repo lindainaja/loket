@@ -15,22 +15,25 @@
     border-bottom: 1px solid rgb(52, 152, 219);
     border-left: 1px solid rgb(52, 152, 219);
     /*border-image: initial;*/
+    background: #fff;
 }
 .kotak-c{
 	border:solid 1px #e74c3c;
+    background: #fff;
 }
 .kotak-b{
 	border-top: 1px solid rgb(46, 204, 113);
     border-right: none;
     border-bottom: 1px solid rgb(46, 204, 113);
     border-left: 1px solid rgb(46, 204, 113);
+    background: #fff;
 }
 .kotak-title{
 	background-color: rgb(52, 152, 219);
     margin: 0 -16px;
-    padding: .2em;
+    padding: 10px .2em;
     color: #fff;
-    /*font-size: .8em;*/
+    
 }
 .kotak-title > i{
     font-size: .8em;

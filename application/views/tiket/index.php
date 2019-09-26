@@ -15,22 +15,32 @@
 <body>
 
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12">
-			<h1><?=$nama_instansi?></h1>
-			<p><?=$alamat_instansi?> Telp.<?=$tlp_instansi?></p>
+	<div class="row headerT">
+		<div class="col-md-12" style="padding-left: 3em">
+			<h2 style="margin:0 "><?=$nama_instansi?></h2>
+			<p style="margin:0 "><?=$alamat_instansi?> Telp.<?=$tlp_instansi?></p>
 		</div>
 	</div>
 	<div class="row">
 
 		<div class="col-md-12">
+			<p class="bantuan">
+				Untuk mendapatkan nomor antrian sesuai dengan pilihan anda silahkan tekan tombol berikut:
+			</p>
 			<nav class="navbar navbar-default">
-				<ul class="nav navbar-nav">
+				<ul class="nav navbar-nav" style="width: 100%">
 					<?foreach($jenis_pendaftaran as $jp):?>
-					<li style="margin:4px"><button class="btn btn-success prnt-ifr" href="<?=base_url()?>tiket/cetak/<?=$jp->slug?>"><?=$jp->kode?> : <?=$jp->nama?></button></li>
+					<?$btn=['bpjs'=>'primary','umum'=>'success','lansia-anak'=>'danger'][$jp->slug]?>
+					<li style="margin:4px"><button class="btn btn-<?=$btn?> prnt-ifr <?=$jp->slug?>" href="<?=base_url()?>tiket/cetak/<?=$jp->slug?>"><?=$jp->kode?> : <?=$jp->nama?></button></li>
 					<?endforeach?>
 				</ul>
 			</nav>
+		</div>
+	</div>
+	<div class="row d footer">
+		<div class="col-md-12 row-a" style="color: #fff;padding:1em 1em 1em 3em">
+			<h4 class="" style="font-size: 100%;margin:2px">Sistem Informasi Antrian</h4>
+			<small class="">Copyright &copy; 2019 Agung Rizky Tiga </small>
 		</div>
 	</div>
 	<div class="row">
@@ -41,10 +51,20 @@
 
 	
 </div>
+
+</div>
 </div>
 
 </body>
 <style type="text/css">
+	.row.d.footer{
+		background:#34495e; 
+		color: #fff;
+		padding: .5em 0;
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+	}
 	#iframeCetak{
 		width: 1px;
 	    height:1px;
@@ -54,8 +74,28 @@
 	    opacity: .5;
 	}
 	button.prnt-ifr{
-		width: 261%;
-    text-align: left;
+		width: 56%;
+	    text-align: left;
+	    font-size: 2em;
+	    margin: 8px;
+	    padding: .5em;
+	}
+	.bantuan{
+	    margin: 1em 1em 0em 2em;
+	    display: block;
+	    width: 484px;
+	}
+	/*button.prnt-ifr.bpjs{
+		background: #3498db;
+		border-color: #3498db;
+	}*/
+	body{
+		background: #eee;
+	}
+	.headerT{
+		background:#34495e; 
+		color: #fff;
+		padding: 1em 0;
 	}
 </style>
 <script type="text/javascript">
@@ -100,4 +140,6 @@
 		}
 	});	
 </script>
+
+
 </html>
