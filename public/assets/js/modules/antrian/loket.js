@@ -33,8 +33,14 @@ $(document).ready(()=>{
 					'b':'rgb(99, 226, 162)',
 					'c':'rgb(265, 97, 86)'
 				} ;
+				let colours_top={
+					'a':'rgb(52, 152, 219)',
+					'b':'rgb(46, 204, 113)',
+					'c':'rgb(231, 76, 60)'
+				} ;
 
 				$('.b-curr-no').css('background-color',colours[this.kode]);
+				$('.row-a').css('background-color',colours_top[this.kode]);
 			},
 			init:function(){
 				let url = base_url()+'antrian/loket_init';
@@ -98,7 +104,7 @@ $(document).ready(()=>{
 			let rh = wh - ah - ch;
 			let mgtop = (rh - (h1cnh)-10)/2; 
 			$('.p_curr_no').css('margin-top',mgtop+'px');
-			$('video').css('height',(rh-1)+'px').css('width','auto');
+			$('video').css('height',(rh)+'px').css('width','auto');
 			console.log(rh);
 		},500);
 	}).resize();

@@ -34,7 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <div class="container-fluid" id="appMonitor">
 	<div class="row a">
-		<div class="col-md-12" style="background: #fff;padding: 1em">
+		<div class="col-md-12 row-a" style="color: #fff;padding: 1em">
 			<h4 class="" style="font-size: 100%;margin:2px"><?=$nama_instansi?></h4>
 			<small class=""><?=$alamat_instansi?></small>
 		</div>
@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 		<div class="col-md-7 b-video" style="overflow: hidden;">
 			<video id="mv" loop>
-			 <source src="<?=base_url()?>public/assets/videos/rudisakitgigi.mp4" type="video/mp4"></source>
+			 <source src="<?=base_url()?>public/assets/videos/24AKGWUkGik.mp4" type="video/mp4"></source>
 		 
 			</video>
 		</div>
