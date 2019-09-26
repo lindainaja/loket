@@ -41,6 +41,39 @@ class Adm extends CI_Controller {
 							  ->result_array();
 		echo json_encode($loket_list);
 	}
+	public function poli_list()
+	{
+		$dt = date('Y-m-d', time());
+/*
+SELECT
+map.id,
+map.al_id,
+map.tanggal,
+map.waktu_mulai,
+map.waktu_dilayani,
+map.`status`,
+map.nama,
+map.alamat,
+map.poli_id,
+mp.nama AS nama_poli,
+mal.nomor,
+mjp.slug AS jenis
+FROM
+m_antrian_poli AS map
+INNER JOIN m_poli AS mp ON map.poli_id = mp.id
+INNER JOIN m_antrian_loket AS mal ON map.al_id = mal.id
+INNER JOIN m_jenis_pendaftaran AS mjp ON mal.jp_id = mjp.id
+
+*/
+		$list = $this->db->select('map.id, map.al_id, map.tanggal, map.waktu_mulai, map.waktu_dilayani, map.status, map.nama, map.alamat, map.poli_id, mp.nama AS nama_poli, mal.nomor, mjp.slug AS jenis ')
+						 ->join('m_poli mp','map.poli_id = mp.id','inner')
+						 ->join('m_antrian_loket mal','map.al_id = mal.id','inner')
+						 ->join('m_jenis_pendaftaran mjp','mal.jp_id = mjp.id','inner')
+						 ->order_by('map.id','asc')
+						 ->get('m_antrian_poli map')
+						 ->result_array();
+		echo json_encode($list);
+	}
 
 	// Tampilkan daftar antrian tabular data
 	public function loket_skip($id)
@@ -145,5 +178,29 @@ class Adm extends CI_Controller {
 	    	echo json_encode($lkt);
 	    }
 		
+	}
+
+	public function poli()
+	{
+		$nama_instansi = License::GetOrganization();
+		$address = License::GetAddress();
+		$telp = License::GetPhone();
+		$daftar_poli_rs = $this->db->get('m_poli')->result_object();
+		$daftar_poli = [''=>'--Pilih Poli--'];
+
+		foreach ($daftar_poli_rs as $poli) {
+			$daftar_poli[$poli->id] = $poli->nama;
+		}
+		$dd_poli = form_dropdown('id_poli',$daftar_poli,'','class="form-control" v-model="form.id_poli" @change="onChangePoli()" :disabled="form.id_antrian==\'\'"');
+		$data = [
+			'lokets' => $this->db->get('m_loket')->result_object(),
+			'nama_instansi' => $nama_instansi,
+			'alamat_instansi' => $address,
+			'telp' => $telp,
+			'dd_poli'=>$dd_poli
+			
+		];
+		$this->load->view('adm/poli', $data);
+	
 	}
 }
