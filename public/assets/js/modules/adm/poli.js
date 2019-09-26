@@ -9,14 +9,17 @@ $(document).ready(()=>{
 			this.init_list();
 		},
 		methods:{
-			init_list:function(){
+			init_list:function(skip){
 				let self = this;
 				let url = base_url() + 'adm/poli_list';
 
 				axios.post(url,{}).then((r)=>{
 					console.log(r)
 					self.list = r.data;
-					admPoliBox.init();
+					if(typeof skip == 'undefined'){
+						admPoliBox.init();
+					}
+					
 				});
 			}
 		}
@@ -62,9 +65,13 @@ $(document).ready(()=>{
 				this.alamat = row.alamat;
 				this.jenis = row.jenis;
 				this.status = row.status;
+				this.id_ap = row.id;
+				this.btnSkipState = 0;
+				this.btnApotikState = 0;
 				
 				this.callAttempt = 0;
-
+				// GET CALL ATTEMP FROM COOKIE
+				this.callAttempt = this.getRawCookie('callAttempt',this.id_ap,0);
 			},
 			executeBtnProc:function(meth){
 				let method = '_executeBtn_'+ meth;
@@ -73,7 +80,12 @@ $(document).ready(()=>{
 			_executeBtn_call:function(lkt){
 			 
 				let self = this;
-				let textUri = 'Pangilan,_Kepada,__'+ this.nama.replace(/\W/,',')+',,    ,., '+this.alamat +',Harap, Menuju, ke ,'+this.nama_poli;
+				let nama_poli = this.nama_poli;
+
+				if(nama_poli.match(/\BP\/KIA/)){
+					nama_poli = 'Poli,B,P,,,K,I,A';
+				}
+				let textUri = 'Pangilan,_Kepada,__'+ this.nama.replace(/\W/,',')+',,    ,., '+this.alamat +',Mohon,Segera, Menuju, ke ,'+nama_poli;
 				let url = base_url() + 'tts/speak/' + btoa(textUri)+'/audio.mp3?q='+(new Date()).getTime();
 
 				videojs('aplayer').loadMedia({src:url});
@@ -89,7 +101,19 @@ $(document).ready(()=>{
 			},
 			
 			_executeBtn_skip:function(lkt){
+				//ERASE COOKIE
+				let self = this;
+				let skip_url = base_url() + 'adm/poli_skip/'+this.id_ap;
 
+				axios.post(skip_url,{id:this.id_ap}).then((r)=>{
+					console.log(r.data);
+
+					self.status = 2;
+					
+					self.clearRawCookie('callAttempt',this.id_ap);
+					admPoliTable.init_list();
+
+				})
 			},
 			_executeBtn_apotik:function(lkt){
 
@@ -114,8 +138,8 @@ $(document).ready(()=>{
 						this.lastPlayAttempt = 0;
 
 						//
-						this.callAttempt +=1;
-
+						this.callAttempt = parseInt(this.callAttempt)+1;
+						this.updateRawCookie('callAttempt',this.id_ap,this.callAttempt);
 						if(this.callAttempt >= 3){
 							this.btnSkipState = 1;
 						}
@@ -141,6 +165,22 @@ $(document).ready(()=>{
 					break;
 				}
 			},
+			clearRawCookie:function(prop,id){
+				let cookie_key = id + '_ap_' + prop;
+				eraseCookie(cookie_key);
+			},
+			updateRawCookie: function(prop,id,value){
+				let cookie_key = id + '_ap_' + prop;
+				eraseCookie(cookie_key);
+				createCookie(cookie_key,value,1);
+			 
+			},
+			getRawCookie: function(prop,id,d){
+				let cookie_key = id+'_ap_'+prop;
+				let r = readCookie(cookie_key);
+			 
+				return !r?d:r;
+			},
 		}
 	});
 
@@ -156,5 +196,46 @@ $(document).ready(()=>{
     });
     player.on("error",function(){
     	admPoliBox.onUpdatePlayerState('error');
-    });
+	});
+	
+	//**************************************************
+
+	 
+
+	let Ws = {
+		conn: 0,
+		instance:false,
+		autoReconnectInterval : 5*1000,
+		init:function() {
+			Ws.conn = new ab.Session('ws://localhost:8080',
+				()=>{
+					Ws.conn.subscribe('onCreateAp',(cat,item)=>{
+						 
+						console.log('Ada pendaftaran loket baru : '+item.data.nomor);
+						// console.log(item.data);
+			 			admPoliTable.init_list(true);
+
+					});
+				},
+				()=>{
+					console.warn('koneksi WecbSocket ditutup');
+					Ws.reconnect();
+				},
+				{'skipSubprotocolCheck': true}
+			); 
+		},
+		reconnect : function( ){
+			console.log('Ws: retry in '+Ws.autoReconnectInterval+'ms' );
+			var self = Ws;
+			setTimeout(function(){
+				console.log("Ws: reconnecting...");
+				self.init();
+			},Ws.autoReconnectInterval);
+		}
+
+	}
+	
+	Ws.init();
+	//*************************************************
+
 });

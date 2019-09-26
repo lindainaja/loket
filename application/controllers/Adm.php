@@ -80,6 +80,11 @@ INNER JOIN m_jenis_pendaftaran AS mjp ON mal.jp_id = mjp.id
 	{
 		$this->db->where('id',$id)->update('m_antrian_loket',['status'=>3]);
 	}
+	public function poli_skip($id)
+	{
+		$this->db->where('id',$id)->update('m_antrian_poli',['status'=>3]);
+		# code...
+	}
 	public function loket_register()
 	{
 		$form = json_decode(file_get_contents('php://input'));
@@ -130,6 +135,12 @@ INNER JOIN m_jenis_pendaftaran AS mjp ON mal.jp_id = mjp.id
 		];
 		// UPDATE DAL 
 		// $this->db->where('date',$tanggal)
+		$context = new ZMQContext();
+	    $socket = $context->getSocket(ZMQ::SOCKET_PUSH);
+	    $socket->connect('tcp://127.0.0.1:5555');
+	    // // print_r($socket);
+		$socket->send(json_encode(['cat'=>'onCreateAp','data'=>$rec_ap]) );
+		
 		$this->loket_update_dal((object)['nomor'=>$nomor]);
 
 		echo json_encode($result);

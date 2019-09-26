@@ -185,7 +185,6 @@ $(document).ready(()=>{
 			_getCookieRow: function(id,key){
 				let cookie_key = id+'_'+key;
 				return readCookie(cookie_key);
-				
 			},
 			init_lkt:function(n){
 				let self=this;
